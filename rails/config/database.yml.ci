@@ -4,4 +4,4 @@ test:
   username: postgres
   password: postgres
   host: postgres
-  database: postgres_test
+  database: postgres
