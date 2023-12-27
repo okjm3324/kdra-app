@@ -47,7 +47,8 @@ jobs:
         run: |
           gem install bundler
           bundle install --jobs 4 --retry 3 --path vendor/bundle
-
+      - name: Wait for PostgreSQL to become available
+          run: sleep 10
       - name: Database create and migrate
         run: |
           cp config/database.yml.ci config/database.yml
