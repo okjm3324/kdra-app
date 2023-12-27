@@ -15,7 +15,7 @@ jobs:
       run:
         working-directory: rails
     services:
-      db:
+      postgres:
         image: postgres:11.6-alpine
         ports:
           - 5432:5432
