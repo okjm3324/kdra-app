@@ -15,13 +15,15 @@ jobs:
       run:
         working-directory: rails
     services:
-      mysql:
-        image: mysql:8.0.32
+      db:
+        image: postgres:11.6-alpine
         ports:
-          - 3306:3306
+          - 5432:5432
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres_test
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Checkout code
