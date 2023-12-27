@@ -1,7 +1,7 @@
-  test:
+test:
   adapter: postgresql
   encoding: utf8
   username: postgres
   password: postgres
-  host: postgres
+  host: db
   database: postgres_test
