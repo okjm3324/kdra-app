@@ -10,15 +10,24 @@
     "format": "next lint --fix --dir src"
   },
   "dependencies": {
+    "@emotion/cache": "^11.11.0",
+    "@emotion/react": "^11.11.3",
+    "@emotion/server": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.2",
+    "@mui/material": "^5.15.2",
     "@types/node": "20.10.5",
     "@types/react": "18.2.45",
     "@types/react-dom": "18.2.18",
+    "axios": "^1.6.3",
     "next": "14.0.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "swr": "^2.2.4",
     "typescript": "5.3.3"
   },
   "devDependencies": {
+    "@emotion/babel-plugin": "^11.11.0",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
     "eslint": "^8.56.0",
