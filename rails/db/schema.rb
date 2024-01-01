@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_29_103824) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_01_075945) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "spots", force: :cascade do |t|
+    t.float "latitude", comment: "緯度"
+    t.float "longitude", comment: "経度"
+    t.string "name", comment: "名前"
+    t.string "image", comment: "イメージパス"
+    t.string "address", comment: "住所"
+    t.integer "status", comment: "ステータス（10:未保存, 20:下書き, 30:公開中）"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_spots_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "provider", default: "email", null: false
@@ -39,4 +52,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_29_103824) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "spots", "users"
 end
