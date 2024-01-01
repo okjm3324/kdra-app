@@ -1,0 +1,9 @@
+ja:
+  activerecord:
+    attributes:
+      spot:
+        name: スポット名
+        address: 住所
+        longitude: 経度
+        latitude: 緯度
+        
