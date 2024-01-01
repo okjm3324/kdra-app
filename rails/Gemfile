@@ -2,7 +2,8 @@ source "https://rubygems.org"
 git_source(:github) {|repo| "https://github.com/#{repo}.git" }
 
 ruby "3.1.2"
-
+# レスポンスJSONを制御する
+gem "active_model_serializers"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.8"
 
@@ -39,6 +40,9 @@ gem "devise_token_auth"
 # gem "rack-cors"
 
 group :development, :test do
+  gem "faker"
+  # テスト用データを作成する
+  gem "factory_bot_rails"
   # pry コンソールを使えるようにする。
   gem "letter_opener_web"
   gem "pry-byebug"
