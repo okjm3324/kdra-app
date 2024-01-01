@@ -3,4 +3,8 @@ class Api::V1::SpotsController < Api::V1::BaseController
     spot = Spot.published.find(params[:id])
     render json: spot
   end
+
+  def index
+
+  end
 end
