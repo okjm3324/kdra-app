@@ -16,8 +16,8 @@ gem "puma", "~> 5.0"
 gem "rack-cors"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
- # ページネーション機能を提供する
- gem "kaminari"
+# ページネーション機能を提供する
+gem "kaminari"
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 
