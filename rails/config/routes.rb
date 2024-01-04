@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       namespace :current do
         resource :user, only: [:show]
       end
+      resources :spots, only: [:index, :show]
     end
   end
 end
