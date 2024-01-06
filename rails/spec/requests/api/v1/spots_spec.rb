@@ -17,7 +17,7 @@ RSpec.describe "Api::V1::spots", type: :request do
         res = JSON.parse(response.body)
         expect(res.keys).to eq ["spots", "meta"]
         expect(res["spots"].length).to eq 10
-        expect(res["spots"][0].keys).to eq ["id", "name", "latitude", "longitude", "address", "created_at", "user"]
+        expect(res["spots"][0].keys).to eq ["id", "name", "latitude", "longitude", "address", "created_at", "status", "user"]
         expect(res["spots"][0]["user"].keys).to eq ["name"]
         expect(res["meta"].keys).to eq ["current_page", "total_pages"]
         expect(res["meta"]["current_page"]).to eq 1
@@ -34,7 +34,7 @@ RSpec.describe "Api::V1::spots", type: :request do
         res = JSON.parse(response.body)
         expect(res.keys).to eq ["spots", "meta"]
         expect(res["spots"].length).to eq 10
-        expect(res["spots"][0].keys).to eq ["id", "name", "latitude", "longitude", "address", "created_at", "user"]
+        expect(res["spots"][0].keys).to eq ["id", "name", "latitude", "longitude", "address", "created_at", "status", "user"]
         expect(res["spots"][0]["user"].keys).to eq ["name"]
         expect(res["meta"].keys).to eq ["current_page", "total_pages"]
         expect(res["meta"]["current_page"]).to eq 2
@@ -58,7 +58,7 @@ RSpec.describe "Api::V1::spots", type: :request do
         it "正常にレコードを取得できる" do
           subject
           res = JSON.parse(response.body)
-          expect(res.keys).to eq ["id", "name", "latitude", "longitude", "address", "created_at", "user"]
+          expect(res.keys).to eq ["id", "name", "latitude", "longitude", "address", "created_at", "status", "user"]
           expect(res["user"].keys).to eq ["name"]
           expect(response).to have_http_status(:ok)
         end
