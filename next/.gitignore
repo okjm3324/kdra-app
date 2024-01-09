@@ -12,7 +12,7 @@
 /.next/
 /out/
 .env.development
-
+.env.local
 # production
 /build
 
