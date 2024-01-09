@@ -15,9 +15,9 @@ import camelcaseKeys from 'camelcase-keys'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
-import Error from '@/components/templates/Error'
 import Loading from '@/components/atoms/Loading'
 import Map from '@/components/atoms/Map'
+import Error from '@/components/templates/Error'
 import { fetcher } from '@/utils'
 
 type SpotProps = {
@@ -63,11 +63,9 @@ const SpotDetail: NextPage = () => {
           color: 'red',
         }}
       >
-        <Typography>
-          {spot.name}
-        </Typography>
+        <Typography>{spot.name}</Typography>
       </Box>
-      <Map />
+
       <Button
         color="primary"
         variant="contained"
