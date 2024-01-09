@@ -49,6 +49,8 @@ const Index: NextPage = () => {
                   name={spot.name}
                   userName={spot.user.name}
                   address={spot.address}
+                  latitude={spot.latitude}
+                  longitude={spot.longitude}
                 />
               </Link>
             </Grid>
