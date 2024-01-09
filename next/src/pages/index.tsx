@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import Loading from '@/components/atoms/Loading'
 import SpotCard from '@/components/organisms/SpotCard'
+import Map from '@/components/atoms/Map'
 import Error from '@/components/templates/Error'
 import { styles } from '@/styles'
 import { fetcher } from '@/utils'
@@ -39,6 +40,7 @@ const Index: NextPage = () => {
   return (
     <Box css={styles.pageMinHeight} sx={{ backgroundColor: '#e6f2ff' }}>
       <Container maxWidth="md" sx={{ pt: 6 }}>
+        <Map spots={spots} />
         <Grid container spacing={4}>
           {spots.map((spot: SpotProps, i: number) => (
             <Grid key={i} item xs={12} md={6}>
