@@ -1,0 +1,14 @@
+ja:
+  activerecord:
+    attributes:
+      spot:
+        name: スポット名
+        address: 住所
+        longitude: 経度
+        latitude: 緯度
+  enums:
+    spot:
+      status:
+        unsaved: 未保存
+        draft: 下書き
+        published: 公開中
