@@ -74,20 +74,22 @@ const Header = () => {
                       Sign in
                     </Button>
                   </Link>
-                  <Button
-                    color="primary"
-                    variant="outlined"
-                    sx={{
-                      textTransform: 'none',
-                      fontSize: 16,
-                      borderRadius: 2,
-                      boxShadow: 'none',
-                      border: '1.5px solid #3EA8FF',
-                      ml: 2,
-                    }}
-                  >
-                    Sign Up
-                  </Button>
+                  <Link href="/sign_up">
+                    <Button
+                      color="primary"
+                      variant="outlined"
+                      sx={{
+                        textTransform: 'none',
+                        fontSize: 16,
+                        borderRadius: 2,
+                        boxShadow: 'none',
+                        border: '1.5px solid #3EA8FF',
+                        ml: 2,
+                      }}
+                    >
+                      Sign Up
+                    </Button>
+                  </Link>
                 </Box>
               )}
               {user.isSignedIn && (
@@ -128,7 +130,7 @@ const Header = () => {
                     <Divider />
                     <MenuItem>
                       <ListItemIcon>
-                        <PersonIcon  fontSize="small" />
+                        <PersonIcon fontSize="small" />
                       </ListItemIcon>
                       プロフィール
                     </MenuItem>
