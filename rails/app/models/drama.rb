@@ -1,0 +1,3 @@
+class Spot < ApplicationRecord
+
+end
