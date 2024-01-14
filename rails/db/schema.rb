@@ -10,13 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_10_161245) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_14_191928) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "dramas", force: :cascade do |t|
-    t.string "title", comment: "ドラマのタイトル"
-    t.string "image", comment: "イメージパス"
+    t.integer "tmdb_id", comment: "TMDB上のタイトルのid"
+    t.string "title", comment: "邦題"
+    t.string "original_title", comment: "原題"
+    t.integer "episode_number", comment: "エピソードの総数"
+    t.integer "season_number", comment: "シーズンの総数"
+    t.string "poster_path", comment: "イメージパス"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
