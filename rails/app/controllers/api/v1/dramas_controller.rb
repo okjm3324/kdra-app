@@ -24,6 +24,7 @@ class  Api::V1::DramasController < Api::V1::BaseController
         original_name: item['table']['original_name'],
         poster_path: item['table']['poster_path'],
         first_air_date: item['table']['first_air_date'],
+        episode_number: item['table']['episode_number']
       }
     end
     render json: filtered_res
@@ -31,8 +32,17 @@ class  Api::V1::DramasController < Api::V1::BaseController
 
   def detail_drama
     id = params[:id]
-    detail = Tmdb::TV.detail(id)
-    render json: detail
+    data = JSON.parse(Tmdb::TV.detail(id).to_json)
+    res = {
+      title: data['table']['name'],
+      original_title: data['table']['original_name'],
+      tmdb_id: data['table']['id'],
+      poster_path: data['table']['poster_path'],
+      first_air_date: data['table']['first_air_date'],
+      episode_number: data['table']['number_of_episodes'],
+      season_number: data['table']['number_of_seasons']
+    }
+    render json: res
   end
 
   private

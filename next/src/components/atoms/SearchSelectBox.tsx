@@ -24,16 +24,8 @@ import DramaCard from '../components/molecules/DramaCard'
 import { LoadingButton } from '@mui/lab'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import React from 'react'
-const dramaData = [
-  'ウ・ヨンウ弁護士は天才肌',
-  'シスターズ',
-  '無人島',
-  'トッケビ',
-  'スタートアップ',
-  '二十五、二一',
-  '他人は地獄だ',
-  '梨泰院クラス',
-]
+import Error from '../templates/Error'
+import { idText } from 'typescript';
 
 const SearchSelectBox = () => {
   const [open, setOpen] = useState(false)
@@ -41,7 +33,24 @@ const SearchSelectBox = () => {
   const url = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${keyword}`
   const poster_url = 'https://image.tmdb.org/t/p/w500'
   const { data, error, isValidating } = useSWR(url, fetcher)
-  const isLoading = isValidating
+  const isLoading = isValidating //ボタンのローディングに使用
+  //dramaレコード新規作成関数
+  const addDrama = async (drama) => {
+    try {
+      const response = await axios.post('http://localhost:3000/api/v1/drama', {
+        tmdb_id: drama.id,
+        title: drama.name,
+        original_title: drama.original_name,
+        first_air_day: frist_air_day,
+        total_ep: epsode_number,
+        poster_url: drama.poster_url,
+
+
+      })
+    } catch (error) {
+      return <Error />
+    }
+  }
   if (error) {
     console.error(error)
   }
