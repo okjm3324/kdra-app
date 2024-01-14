@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'dramas/index'
+  get 'dramas/show'
+  get 'dramas/create'
+  get 'dramas/search_drama'
+  get 'dramas/delete'
+  get 'dramas/update'
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   namespace :api do
@@ -13,6 +19,12 @@ Rails.application.routes.draw do
         resources :spots, only: [:index, :show, :create, :update]
       end
       resources :spots, only: [:index, :show]
+      resources :dramas, only: [:index, :show, ] do
+        collection do
+          get :search_drama
+          get :detail_drama
+        end
+      end
     end
   end
 end
