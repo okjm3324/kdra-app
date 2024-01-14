@@ -9,6 +9,14 @@ class  Api::V1::DramasController < Api::V1::BaseController
   end
 
   def create
+    drama = Drama.new(drama_params)
+    if drama.save
+      render json: drama, status: :create
+    else
+      render json: drama.error, status: :unprocessable_entity
+    end
+  end
+
 
   end
 
@@ -48,7 +56,7 @@ class  Api::V1::DramasController < Api::V1::BaseController
   private
 
   def drama_params
-    params.require(:drama).permit(:tmdb_id, :title, :original_title, :image, :total_episodes, :year)
+    params.require(:drama).permit(:tmdb_id, :title, :original_title, :poster_path, :episode_number, :season_number :first_air_date)
   end
 
 end
