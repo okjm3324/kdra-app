@@ -28,6 +28,10 @@ import Error from '../templates/Error'
 import { idText } from 'typescript';
 
 const SearchSelectBox = () => {
+  //テスト
+  const createUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/dramas'
+  const headers = { 'Content-Type': 'application/json' }
+  //テスト終わり
   const [open, setOpen] = useState(false)
   const [keyword, setKeyword] = useState('')
   const url = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${keyword}`
@@ -67,12 +71,40 @@ const SearchSelectBox = () => {
   const handleClose = () => {
     setOpen(false)
   }
+  //キーワード検索関数
   const onClickDataFetch = () => {
-    const newKeyword = getValues().single.toString()
+    const newKeyword = getValues().single ? getValues().single.toString() : ''
     setKeyword(newKeyword)
     const newUrl = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${newKeyword}`
     mutate(newUrl)
   }
+  const dramaDetails = {
+      "drama": {
+        "title": "ドラマのタイトル",
+        "original_title": "原題",
+        "tmdb_id": 6666,
+        "first_air_date": "初回放送日",
+        "episode_number": 19,
+        "poster_path": "ポスターのURL",
+        "season_number": 7,
+
+      }}
+  //Dramaレコードの作成ハンドラ
+  const onClickCreateDrama = (dramaDetails) => {
+    axios({
+      method: 'POST',
+      url: createUrl,
+      data: { ...dramaDetails },
+      headers: headers,
+    })
+    .then(response => {
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.error(error)
+    })
+  }
+
   return (
     <>
       <div style={{ padding: 30 }}></div>
@@ -110,19 +142,6 @@ const SearchSelectBox = () => {
                 />
                 <Box sx={{ mt: 5 }} />
               </form>
-              <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>{'Output JSON'}</DialogTitle>
-                <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
-                    <pre>{JSON.stringify(getValues(), null, 2)}</pre>
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose} autoFocus>
-                    OK
-                  </Button>
-                </DialogActions>
-              </Dialog>
             </>
           </Grid>
         </Grid>
@@ -158,6 +177,7 @@ const SearchSelectBox = () => {
         </Box>
       </Box>
       <Button
+        onClick={()=> onClickCreateDrama(dramaDetails)}
         color="primary"
         variant="contained"
         sx={{

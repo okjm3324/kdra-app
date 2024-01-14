@@ -1,4 +1,4 @@
-class Spot < ApplicationRecord
+class Drama < ApplicationRecord
   has_many :spots, dependent: :destroy
-  validates :name, presence: true
+  validates :title, presence: true
 end
