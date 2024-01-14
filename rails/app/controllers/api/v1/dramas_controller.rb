@@ -11,14 +11,13 @@ class  Api::V1::DramasController < Api::V1::BaseController
   def create
     drama = Drama.new(drama_params)
     if drama.save
-      render json: drama, status: :create
+      render json: drama
     else
       render json: drama.error, status: :unprocessable_entity
     end
   end
 
 
-  end
 
   def search_drama
     keyword = params[:keyword]
@@ -56,7 +55,7 @@ class  Api::V1::DramasController < Api::V1::BaseController
   private
 
   def drama_params
-    params.require(:drama).permit(:tmdb_id, :title, :original_title, :poster_path, :episode_number, :season_number :first_air_date)
+    params.require(:drama).permit(:tmdb_id, :title, :original_title, :poster_path, :episode_number, :season_number, :first_air_date)
   end
 
 end
