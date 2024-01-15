@@ -34,7 +34,6 @@ const DramaSearch = () => {
 return (
   <>
   <SearchSelectBox />
-  <h1>新しいドラマを追加する</h1>
   </>
 )
 }
