@@ -20,7 +20,7 @@ import camelcaseKeys from 'camelcase-keys'
 import { fetcher } from '@/utils'
 import Link from 'next/link'
 import type { NextPage } from 'next'
-import DramaCard from '../components/molecules/DramaCard'
+import DramaCard from './DramaCard'
 import { LoadingButton } from '@mui/lab'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import React from 'react'
@@ -32,6 +32,8 @@ const SearchSelectBox = () => {
   const createUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/dramas'
   const headers = { 'Content-Type': 'application/json' }
   //テスト終わり
+  //Draamの詳細を取得するためのステイト
+  const [dramaDetail, setDramaDetail] = useState(null)
   const [open, setOpen] = useState(false)
   const [keyword, setKeyword] = useState('')
   const url = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${keyword}`
@@ -78,23 +80,12 @@ const SearchSelectBox = () => {
     const newUrl = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${newKeyword}`
     mutate(newUrl)
   }
-  const dramaDetails = {
-      "drama": {
-        "title": "ドラマのタイトル",
-        "original_title": "原題",
-        "tmdb_id": 6666,
-        "first_air_date": "初回放送日",
-        "episode_number": 19,
-        "poster_path": "ポスターのURL",
-        "season_number": 7,
-
-      }}
   //Dramaレコードの作成ハンドラ
-  const onClickCreateDrama = (dramaDetails) => {
+  const onClickCreateDrama = (dramaDetail) => {
     axios({
       method: 'POST',
       url: createUrl,
-      data: { ...dramaDetails },
+      data: { drama: {...dramaDetail} },
       headers: headers,
     })
     .then(response => {
@@ -177,7 +168,7 @@ const SearchSelectBox = () => {
         </Box>
       </Box>
       <Button
-        onClick={()=> onClickCreateDrama(dramaDetails)}
+        onClick={()=> onClickCreateDrama(dramaDetail)}
         color="primary"
         variant="contained"
         sx={{
@@ -190,6 +181,8 @@ const SearchSelectBox = () => {
       >
         ドラマ追加
       </Button>
+      <DramaCard setDramaDetail={setDramaDetail}/>
+      <p>{dramaDetail ? dramaDetail.title : 'ありません'}</p>
     </>
   )
 }
