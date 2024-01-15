@@ -18,18 +18,23 @@ type DramaProps = {
   episord_number: number
   season_number: number
 }
-const DramaCard = ({ tmdb_id, setDramaDetail }) => {
-  const theme = useTheme()
+const DramaCard = ({
+  tmdbId,
+  setDramaDetail,
+  posterPath,
+  title,
+  date,
+  selected ,
+  setSelectedTmdbId,
+}) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
-  const titleTest = 'ウヨンウ弁護士は天才肌'
-  const date = "2022/10/12"
   const poster_url = 'https://image.tmdb.org/t/p/w92'
-  const image_path =  poster_url +'/iimx8tBPd1E9VnezXD9PycfhMzL.jpg'
-  const id = 96648
+  const image_path = poster_url + posterPath
   //
   const onClickFetchDetail = async () => {
+    setSelectedTmdbId(tmdbId)
     try {
-      const res = await axios.get(`${baseUrl}/dramas/detail_drama?id=${id}`)
+      const res = await axios.get(`${baseUrl}/dramas/detail_drama?id=${tmdbId}`)
       setDramaDetail(res.data)
       console.log(res.data)
     } catch (error) {
@@ -37,7 +42,15 @@ const DramaCard = ({ tmdb_id, setDramaDetail }) => {
     }
   }
   return (
-    <Card sx={{ display: 'flex', boxShadow: 3 }} onClick={onClickFetchDetail}>
+    <Card
+      sx={{
+        display: 'flex',
+        boxShadow: 3,
+        backgroundColor: selected ? 'blue' : 'white',
+      }}
+      onClick={onClickFetchDetail}
+      style={{ backgroundColor: selected ? 'lightgray' : 'white' }}
+    >
       <CardMedia
         component="img"
         sx={{ width: '94px', height: '141px', objectFit: 'cover' }}
@@ -47,7 +60,7 @@ const DramaCard = ({ tmdb_id, setDramaDetail }) => {
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <CardContent sx={{ flex: '1 0 auto' }}>
           <Typography component="div" variant="h2" style={{ fontSize: '16px', fontWeight: 'bold' }}>
-            {titleTest}
+            {title}
           </Typography>
           <Typography variant="subtitle1" color="text.secondary" component="div" style={{ fontSize: '14px'}}>
             {date}
