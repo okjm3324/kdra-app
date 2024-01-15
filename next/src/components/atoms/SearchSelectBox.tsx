@@ -34,29 +34,13 @@ const SearchSelectBox = () => {
   //テスト終わり
   //Draamの詳細を取得するためのステイト
   const [dramaDetail, setDramaDetail] = useState(null)
+  const [selectedTmdbId, setSelectedTmdbId] = useState(null)
   const [open, setOpen] = useState(false)
   const [keyword, setKeyword] = useState('')
   const url = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${keyword}`
   const poster_url = 'https://image.tmdb.org/t/p/w500'
   const { data, error, isValidating } = useSWR(url, fetcher)
   const isLoading = isValidating //ボタンのローディングに使用
-  //dramaレコード新規作成関数
-  const addDrama = async (drama) => {
-    try {
-      const response = await axios.post('http://localhost:3000/api/v1/drama', {
-        tmdb_id: drama.id,
-        title: drama.name,
-        original_title: drama.original_name,
-        first_air_day: frist_air_day,
-        total_ep: epsode_number,
-        poster_url: drama.poster_url,
-
-
-      })
-    } catch (error) {
-      return <Error />
-    }
-  }
   if (error) {
     console.error(error)
   }
@@ -70,9 +54,6 @@ const SearchSelectBox = () => {
   const handleClickOpen = () => {
     setOpen(true)
   }
-  const handleClose = () => {
-    setOpen(false)
-  }
   //キーワード検索関数
   const onClickDataFetch = () => {
     const newKeyword = getValues().single ? getValues().single.toString() : ''
@@ -85,15 +66,15 @@ const SearchSelectBox = () => {
     axios({
       method: 'POST',
       url: createUrl,
-      data: { drama: {...dramaDetail} },
+      data: { drama: { ...dramaDetail } },
       headers: headers,
     })
-    .then(response => {
-      console.log(response.data)
-    })
-    .catch(error => {
-      console.error(error)
-    })
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }
 
   return (
@@ -150,26 +131,25 @@ const SearchSelectBox = () => {
           {data &&
             data.map((item, index) => (
               <React.Fragment key={index}>
-                <div>{item.id}</div>
-                <div>{item.name}</div>
-                <div>{item.original_name}</div>
-                <Card>
-                  <CardMedia
-                    component="img"
-                    height="500"
-                    image={poster_url + item.poster_path}
-                    alt={item.name}
-                  />
-                  {/* 他のCardコンポーネント（CardHeader、CardContentなど） */}
-                </Card>
-                <div>{item.first_air_date}</div>
+                <DramaCard
+                  setDramaDetail={setDramaDetail}
+                  setSelectedTmdbId={setSelectedTmdbId}
+                  tmdbId={item.id}
+                  posterPath={item.poster_path}
+                  title={item.name}
+                  date={item.first_air_date}
+                  selected={selectedTmdbId === item.id}
+                />
               </React.Fragment>
             ))}
         </Box>
       </Box>
+
+      <p>{dramaDetail ? dramaDetail.title : 'ありません'}</p>
       <Button
-        onClick={()=> onClickCreateDrama(dramaDetail)}
+        onClick={() => onClickCreateDrama(dramaDetail)}
         color="primary"
+        disabled={!dramaDetail}
         variant="contained"
         sx={{
           color: 'white',
@@ -181,8 +161,6 @@ const SearchSelectBox = () => {
       >
         ドラマ追加
       </Button>
-      <DramaCard setDramaDetail={setDramaDetail}/>
-      <p>{dramaDetail ? dramaDetail.title : 'ありません'}</p>
     </>
   )
 }
