@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_01_075945) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_14_210504) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "dramas", force: :cascade do |t|
+    t.integer "tmdb_id", comment: "TMDB上のタイトルのid"
+    t.string "title", comment: "邦題"
+    t.string "original_title", comment: "原題"
+    t.integer "episode_number", comment: "エピソードの総数"
+    t.integer "season_number", comment: "シーズンの総数"
+    t.string "poster_path", comment: "イメージパス"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "first_air_date"
+  end
 
   create_table "spots", force: :cascade do |t|
     t.float "latitude", comment: "緯度"
@@ -24,6 +36,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_01_075945) do
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "drama_id", null: false
+    t.index ["drama_id"], name: "index_spots_on_drama_id"
     t.index ["user_id"], name: "index_spots_on_user_id"
   end
 
@@ -52,5 +66,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_01_075945) do
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
+  add_foreign_key "spots", "dramas"
   add_foreign_key "spots", "users"
 end
