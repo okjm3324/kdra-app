@@ -12,8 +12,14 @@ import Error from '../templates/Error'
 import { idText } from 'typescript';
 import {useTheme } from '@mui/material/styles'
 import Loading from './Loading';
+import { useRouter } from 'next/router';
+import { useSnackbarState } from '@/hooks/useGlobalState';
 
-const SearchSelectBox = () => {
+const SearchSelectBox = ({ setModalOpen }) => {
+  //現在のパスを取得するために使用
+  const router = useRouter()
+  //メッセージの表示に使用
+  const [snackbar, setSnackbar] = useSnackbarState()
   //テスト
   const createUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/dramas'
   const headers = { 'Content-Type': 'application/json' }
@@ -55,9 +61,28 @@ const SearchSelectBox = () => {
     })
       .then((response) => {
         console.log(response.data)
+        setSnackbar({
+          message: 'ドラマを追加しました',
+          severity: 'success',
+          pathname: router.pathname,
+        })
+        setModalOpen(false)
       })
       .catch((error) => {
-        console.error(error)
+        if (error.response && error.response.data && error.response.data.message){
+          setSnackbar({
+            message: error.response.data.message,
+            severity: 'error',
+            pathname: router.pathname,
+          })
+        } else {
+          // 一般的なエラーメッセージを使用してスナックバーの状態を更新
+          setSnackbar({
+            message: 'ドラマの追加に失敗しました。',
+            severity: 'error',
+            pathname: router.pathname,
+          })
+        }
       })
   }
 
