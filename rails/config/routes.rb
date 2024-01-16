@@ -13,6 +13,12 @@ Rails.application.routes.draw do
         resources :spots, only: [:index, :show, :create, :update]
       end
       resources :spots, only: [:index, :show]
+      resources :dramas, only: [:index, :show, :create] do
+        collection do
+          get :search_drama
+          get :detail_drama
+        end
+      end
     end
   end
 end
