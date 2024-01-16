@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab'
 import {
   Grid,
   Button,
@@ -5,29 +6,21 @@ import {
   TextField,
   Autocomplete,
   Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Card,
   CardMedia,
-} from '@mui/material';
-import useSWR, { mutate } from "swr"
-import { useForm, Controller } from 'react-hook-form';
-import { useState } from 'react'
-import camelcaseKeys from 'camelcase-keys'
-import { fetcher } from '@/utils'
-import Link from 'next/link'
-import type { NextPage } from 'next'
-import DramaCard from '../components/molecules/DramaCard'
-import { LoadingButton } from '@mui/lab'
+} from '@mui/material'
 import axios, { AxiosResponse, AxiosError } from 'axios'
+import type { NextPage } from 'next'
 import React from 'react'
+import { useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import useSWR, { mutate } from 'swr'
 import Modal from '../../components/molecules/Modal'
-import SearchSelectBox from '@/components/atoms/SearchSelectBox'
+import DramaCard from '../components/molecules/DramaCard'
+import CreateDramaContent from '@/components/organisms/CreateDramaContent'
+import { fetcher } from '@/utils'
 
-const dramaData = [
+const dramaData: string[] = [
   'ウ・ヨンウ弁護士は天才肌',
   'シスターズ',
   '無人島',
@@ -38,21 +31,21 @@ const dramaData = [
   '梨泰院クラス',
 ]
 
-const CreateSpot = () => {
-  const [open, setOpen] = useState(false)
-  const [keyword, setKeyword] = useState('')
-  const url = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${keyword}`
-  const poster_url = 'https://image.tmdb.org/t/p/w500'
+const CreateSpot: React.FC = () => {
+  const [open, setOpen] = useState<boolean>(false)
+  const [keyword, setKeyword] = useState<string>('')
+  const url: string = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${keyword}`
+  const poster_url: string = 'https://image.tmdb.org/t/p/w500'
   const { data, error, isValidating } = useSWR(url, fetcher)
-  const isLoading = isValidating
+  const isLoading: boolean = isValidating
   //モーダルのため
-  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (): void => {
     setModalOpen(true)
   }
 
-  const handleCloseModal = () => {
+  const handleCloseModal = (): void => {
     setModalOpen(false)
   }
   if (error) {
@@ -65,16 +58,16 @@ const CreateSpot = () => {
       multi: [],
     },
   })
-  const handleClickOpen = () => {
+  const handleClickOpen = (): void => {
     setOpen(true)
   }
-  const handleClose = () => {
+  const handleClose = (): void => {
     setOpen(false)
   }
-  const onClickDataFetch = () => {
-    const newKeyword = getValues().single.toString()
+  const onClickDataFetch = (): void => {
+    const newKeyword: string = getValues().single.toString()
     setKeyword(newKeyword)
-    const newUrl = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${newKeyword}`
+    const newUrl: string = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${newKeyword}`
     mutate(newUrl)
   }
   return (
@@ -122,11 +115,12 @@ const CreateSpot = () => {
         ドラマを追加する
       </Button>
       <Modal open={modalOpen} onClose={handleCloseModal}>
-        <SearchSelectBox setModalOpen={setModalOpen} />
+        <CreateDramaContent setModalOpen={setModalOpen} />
       </Modal>
       <LoadingButton
         variant="contained"
-        onClick={onClickDataFetch}SetModalOpen={setModalOpen}
+        onClick={onClickDataFetch}
+        SetModalOpen={setModalOpen}
         loading={isLoading}
         sx={{ fontWeight: 'bold', color: 'white' }}
       >
@@ -135,7 +129,7 @@ const CreateSpot = () => {
       <Box>
         <Box>
           {data &&
-            data.map((item, index) => (
+            data.map((item: any, index: number) => (
               <React.Fragment key={index}>
                 <div>{item.id}</div>
                 <div>{item.name}</div>
