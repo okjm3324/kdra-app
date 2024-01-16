@@ -1,5 +1,6 @@
 class Spot < ApplicationRecord
   belongs_to :user
+  belongs_to :drama
   enum :status, { unsaved: 10, draft: 20, published: 30 }, _prefix: true
   validates :latitude, :longitude, :name, presence: true, if: :published?
   validate :verify_only_one_unsaved_status_is_allowed
