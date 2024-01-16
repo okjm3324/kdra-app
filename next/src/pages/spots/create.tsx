@@ -122,11 +122,11 @@ const CreateSpot = () => {
         ドラマを追加する
       </Button>
       <Modal open={modalOpen} onClose={handleCloseModal}>
-        <SearchSelectBox />
+        <SearchSelectBox setModalOpen={setModalOpen} />
       </Modal>
       <LoadingButton
         variant="contained"
-        onClick={onClickDataFetch}
+        onClick={onClickDataFetch}SetModalOpen={setModalOpen}
         loading={isLoading}
         sx={{ fontWeight: 'bold', color: 'white' }}
       >
