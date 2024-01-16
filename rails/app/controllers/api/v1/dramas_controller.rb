@@ -9,11 +9,17 @@ class  Api::V1::DramasController < Api::V1::BaseController
   end
 
   def create
-    drama = Drama.new(drama_params)
-    if drama.save
-      render json: drama
+    existing_drama = Drama.find_by(tmdb_id: drama_params[:tmdb_id])
+
+    if existing_drama
+      render json: { message: 'そのドラマはすでに存在します' }, status: :unprocessable_entity
     else
-      render json: drama.error, status: :unprocessable_entity
+      drama = Drama.new(drama_params)
+      if drama.save
+        render json: drama
+      else
+        render json: drama.error, status: :unprocessable_entity
+      end
     end
   end
 
