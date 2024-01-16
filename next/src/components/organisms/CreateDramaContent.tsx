@@ -4,18 +4,18 @@ import { useForm, Controller } from 'react-hook-form';
 import { useState } from 'react'
 import { fetcher } from '@/utils'
 import type { NextPage } from 'next'
-import DramaCard from './DramaCard'
+import DramaCard from '../atoms/DramaCard'
 import { LoadingButton } from '@mui/lab'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import React from 'react'
 import Error from '../templates/Error'
 import { idText } from 'typescript';
 import {useTheme } from '@mui/material/styles'
-import Loading from './Loading';
+import Loading from '../atoms/Loading';
 import { useRouter } from 'next/router';
 import { useSnackbarState } from '@/hooks/useGlobalState';
 
-const SearchSelectBox = ({ setModalOpen }) => {
+const CreateDramaContent = ({ setModalOpen }) => {
   //現在のパスを取得するために使用
   const router = useRouter()
   //メッセージの表示に使用
@@ -192,4 +192,4 @@ const SearchSelectBox = ({ setModalOpen }) => {
     </>
   )
 }
-export default SearchSelectBox
+export default CreateDramaContent
