@@ -3,6 +3,8 @@ class  Api::V1::DramasController < Api::V1::BaseController
   Tmdb::Api.key(ENV['TMDB_API_KEY'])
   Tmdb::Api.language("ja")
   def index
+   dramas = Drama.all
+   render json: dramas
   end
 
   def show

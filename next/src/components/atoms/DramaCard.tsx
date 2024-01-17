@@ -6,12 +6,15 @@ import Typography from '@mui/material/Typography'
 import axios from 'axios'
 import * as React from 'react'
 
+type DramaDetail = any
 type DramaProps = {
+  tmdbId: number
+  setDramaDetail: React.Dispatch<React.SetStateAction<DramaDetail>>
   title: string
-  poster_path: string
-  first_air_date: string
-  episord_number: number
-  season_number: number
+  posterPath: string
+  date: string
+  selected: boolean
+  setSelectedTmdbId: React.Dispatch<React.SetStateAction<number>>
 }
 const DramaCard = ({
   tmdbId,
