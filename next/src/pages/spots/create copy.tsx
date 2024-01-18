@@ -3,14 +3,9 @@ import {
   Grid,
   Button,
   Box,
-  FormControl,
   TextField,
-  MenuItem,
-  Select,
-  InputLabel,
   Autocomplete,
   Typography,
-  FormHelperText,
   Card,
   CardMedia,
 } from '@mui/material'
@@ -76,7 +71,6 @@ const CreateSpot: React.FC = () => {
     defaultValues: {
       single: {},
       id: null,
-      episode: null
     },
   })
   const handleClickOpen = (): void => {
@@ -99,24 +93,16 @@ const CreateSpot: React.FC = () => {
   //オートコンプリートの関数
   const handleAutocompleteChange = (event, newValue) => {
     // newValue は選択されたドラマオブジェクトです
+    setSelectedDrama(newValue)
+    setValue('title', newValue.title)
+    setValue('id', newValue.id)
     if (newValue !== null) {
       setSelectedDrama(newValue)
-      setValue('id', newValue.id)
-    } else {
-      setSelectedDrama(null)
-      setValue('id', null)
-    }
-
-    if (newValue !== null) {
-      setSelectedDrama(newValue)
-
     }
   }
 
-  const handleUpdateSpot = (data) => {
-    const { single, ...formData} = data
-
-    console.log(formData)
+  const handleUpdateSpot = () => {
+    console.log(getValues())
   }
   return (
     <>
@@ -137,16 +123,14 @@ const CreateSpot: React.FC = () => {
                 </Typography>
                 <Controller
                   control={control}
-                  name="single"
+                  name="title"
                   render={({ field }) => (
                     <Autocomplete
                       {...field}
                       fullWidth
                       options={dramas}
                       getOptionLabel={(option) => option.title}
-                      renderInput={(params) => (
-                      <TextField {...params} label="drama title" />
-                      )}
+                      renderInput={(params) => <TextField {...params} label="drama title" />}
                       onChange={handleAutocompleteChange}
                     />
                   )}
@@ -154,51 +138,22 @@ const CreateSpot: React.FC = () => {
                 <Box sx={{ mt: 5 }} />
                 {selectedDrama && (
                   <>
-                    <DramaCard
-                      tmdbId={selectedDrama.tmdb_id}
-                      posterPath={selectedDrama.poster_path}
-                      title={selectedDrama.title}
-                      date={selectedDrama.first_air_date}
-                    />
-                    <Controller
-                      control={control}
-                      name="episode"
-                      render={({ field, fieldState }) => (
-                        <FormControl fullWidth error={fieldState.invalid}>
-                          <InputLabel id="area-label">地域</InputLabel>
-                          <Select
-                            labelId="area-label"
-                            label="地域" // フォーカスを外した時のラベルの部分これを指定しないとラベルとコントロール線が被る
-                            {...field}
-                          >
-                            <MenuItem value="" sx={{color:'gray'}}>
-                              未選択
-                            </MenuItem>
-                            {Array.from({ length: selectedDrama.episode_number }, (_, index) => (
-                                <MenuItem key={index + 1} value={index + 1}>
-                                  {index + 1}話
-                                </MenuItem>
-                              ))
-                            }
-                          </Select>
-                          <FormHelperText>
-                            {fieldState.error?.message}
-                          </FormHelperText>
-                        </FormControl>
-                      )}
-                    />
-                    <Controller
-                      control={control}
-                      name="name"
-                      render={( {field} ) => ( 
-                        <TextField 
-                          {...field}
-                          label="スポット名"
-                          variant="outlined"
-                        />
-                      )}
-                    />
-                  </>
+                  <DramaCard
+                    tmdbId={selectedDrama.tmdb_id}
+                    posterPath={selectedDrama.poster_path}
+                    title={selectedDrama.title}
+                    date={selectedDrama.first_air_date}
+                  />
+              
+                <Controller
+                  control={control}
+                  name="episode"
+                  render={({ field }) => (
+                      <FormSelectBox episodeNumber={selectedDrama.episode_number } selectedEpisode={field.value}  
+                      setSelectedEpisode={(value) => field.onChange(value)} />
+                  )}
+                />
+                </>
                 )}
                 <input type="submit" />
               </form>
