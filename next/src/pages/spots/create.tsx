@@ -15,7 +15,7 @@ import {
   Card,
   CardMedia,
   Container,
-  styled
+  styled,
 } from '@mui/material'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import type { NextPage } from 'next'
@@ -48,55 +48,68 @@ const CreateSpot: React.FC = () => {
   const isLoading: boolean = isValidating
 
   const [dramas, setDramas] = useState<Array<{ id: number; tmdb_id: number; title: string; original_title: string; episode_number: number; season_number: number; poster_path: string }>>([]);
-
+//フォームの宣言
+const { control, handleSubmit, setValue, getValues, register, formState: { errors }  } = useForm({
+  mode: 'onChange',
+  defaultValues: {
+    single: {},
+    drama_id: null,
+    episode: null,
+    key: null,
+  },
+})
   //ドロップボックスのため
   const [imageUrl, setImageUrl] = useState('')
   const [imageKey, setImageKey] = useState('')
-
+  //ドロップボックスの関数
   const onDrop = useCallback((acceptedFiles) => {
-    acceptedFiles.forEach(async (file) => {
-      try {
-        // 認証情報を取得
-        const accessToken = localStorage.getItem('access-token');
-        console.log(accessToken)
-        const client = localStorage.getItem('client');
-        const uid = localStorage.getItem('uid');
-        // 認証情報をヘッダーに設定
-        const authHeaders = {
-          'access-token': accessToken,
-          'client': client,
-          'uid': uid,
+      acceptedFiles.forEach(async (file) => {
+        try {
+          // 認証情報を取得
+          const accessToken = localStorage.getItem('access-token')
+          console.log(accessToken)
+          const client = localStorage.getItem('client')
+          const uid = localStorage.getItem('uid')
+          // 認証情報をヘッダーに設定
+          const authHeaders = {
+            'access-token': accessToken,
+            'client': client,
+            'uid': uid,
+          }
+          // POSTリクエストで署名付きURLを取得
+          const response = await axios.post(
+            'http://localhost:3000/api/v1/images',
+            {},
+            {
+              headers: authHeaders,
+            },
+          )
+          const key = response.data.key
+          const signedUrl = response.data.signed_url
+          // PUTリクエストでファイルをアップロード
+          await axios.put(signedUrl, file, {
+            headers: {
+              'Content-Type': file.type,
+            },
+          })
+          // GETリクエストで署名付きURLを取得して画像を表示
+          const res = await axios.get(
+            `http://localhost:3000/api/v1/images/${key}`,
+            {
+              headers: authHeaders,
+            },
+          )
+          //画像のURLをセット
+          setImageUrl(res.data.signed_url)
+          setImageKey(key)
+          setValue('key', key)
+        } catch (error) {
+          console.error('ファイルのアップロード中にエラーが発生しました', error)
         }
-        // POSTリクエストで署名付きURLを取得
-        const response = await axios.post('http://localhost:3000/api/v1/images', {}, {
-          headers: authHeaders
-        });
-        console.log(response)
-        
-        console.log("keyは"+response.data.key)
-        console.log("認証URLは"+response.data.signed_url)
-        const key = response.data.key
-        const signedUrl = response.data.signed_url
-  console.log('アップロード開始'+ key + 'と'+ signedUrl)
-        // PUTリクエストでファイルをアップロード
-        await axios.put(signedUrl, file, {
-          headers: {
-            'Content-Type': file.type,
-          },
-        })
- console.log('ここまでok') 
-        // GETリクエストで署名付きURLを取得して画像を表示
-        const res = await axios.get(`http://localhost:3000/api/v1/images/${key}`, {
-          headers: authHeaders
-        })
-        setImageUrl(res.data.signed_url)
-        setImageKey(key)
-        console.log('フィニッシュです')
-      } catch (error) {
-        console.error('ファイルのアップロード中にエラーが発生しました', error)
-      }
-    })
-  }, [])
+      })
+    },
+    [setImageUrl, setImageKey, setValue],
+  )
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
   useEffect(() => {
@@ -122,7 +135,7 @@ const CreateSpot: React.FC = () => {
           'access-token': localStorage.getItem('access-token'),
           client: localStorage.getItem('client'),
           uid: localStorage.getItem('uid'),
-        };
+        }
       } catch (error) {
         console.error('リクエストエラー', error)
       }
@@ -138,27 +151,7 @@ const CreateSpot: React.FC = () => {
   const handleCloseModal = (): void => {
     setModalOpen(false)
   }
-//フォームの宣言
-  const { control, handleSubmit, setValue, getValues, register, formState: { errors }  } = useForm({
-    mode: 'onChange',
-    defaultValues: {
-      single: {},
-      id: null,
-      episode: null
-    },
-  })
-  const handleClickOpen = (): void => {
-    setOpen(true)
-  }
-  const handleClose = (): void => {
-    setOpen(false)
-  }
-  const onClickDataFetch = (): void => {
-    const newKeyword: string = getValues().single.toString()
-    setKeyword(newKeyword)
-    const newUrl: string = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${newKeyword}`
-    mutate(newUrl)
-  }
+
   //新規ドラマを追加した場合セレクトボックスに反映する関数
   const updateDramaList = (newDrama) => {
     setDramas([...dramas, newDrama])
@@ -169,16 +162,23 @@ const CreateSpot: React.FC = () => {
     // newValue は選択されたドラマオブジェクトです
     if (newValue !== null) {
       setSelectedDrama(newValue)
-      setValue('id', newValue.id)
+      setValue('drama_id', newValue.id)
     } else {
       setSelectedDrama(null)
-      setValue('id', null)
+      setValue('drama_id', null)
     }
 
     if (newValue !== null) {
       setSelectedDrama(newValue)
     }
   }
+  //テストオートコンプリート
+  const handleChangeAutoComplete = (value) => {
+    console.log("バリュー" + value)
+    setSelectedDrama(value)
+    console.log("これが"+selectedDrama)
+  }
+
 
   const handleUpdateSpot = (data) => {
     const { single, ...formData} = data
@@ -187,9 +187,18 @@ const CreateSpot: React.FC = () => {
   }
   return (
     <>
-    <Container style={{ display: 'flex',　flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+    <Container style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
         <div style={{ padding: 30 }}></div>
         <Box>
+        <Autocomplete
+      id="combo-box-demo"
+      options={dramas}
+      getOptionLabel={(option) => option.title}
+      style={{ width: 300 }}
+      renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined"  label="drama title"/>}
+      onChange={(e,value)=>handleChangeAutoComplete(value)}
+    />
+
           <Grid
             container
             rowSpacing={2}
@@ -203,6 +212,7 @@ const CreateSpot: React.FC = () => {
                   <Typography gutterBottom variant="h4" component="h2">
                     Drama Select
                   </Typography>
+                  <input type="hidden" {...register('drama_id')}  />
                   <Controller
                     control={control}
                     name="single"
@@ -269,10 +279,22 @@ const CreateSpot: React.FC = () => {
                     </>
                   )}
 
-  <label className="block mb-4">
-          <span>画像</span>
-          <img src={imageUrl}/>
-          {imageKey && <img src={imageUrl} className="h-32 m-4" />}
+                  <label className="block mb-4">
+                    <span>画像</span>
+                    {imageKey && (
+                      <Card sx={{ width: 200, height: 200, overflow: 'hidden' }}>
+                        <CardMedia
+                          component="img"
+                          image={imageUrl}
+                          alt="画像"
+                          sx={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      </Card>
+                    )}
           <div className="border-dashed border-2 h-32 rounded flex justify-center items-center" {...getRootProps()} >
             <input {...getInputProps()} /><p className="block text-gray-400">Drop the files here ...</p>
           </div>
@@ -315,18 +337,6 @@ const CreateSpot: React.FC = () => {
           )}
         </Paper>
       </Box>
-        <Card sx={{ width: 200, height: 200, overflow: 'hidden' }}>
-        <CardMedia
-          component="img"
-          image={imageUrl}
-          alt="画像"
-          sx={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover'
-          }}
-        />
-      </Card>
       </Box>
       </Container>
     </>
