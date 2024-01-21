@@ -49,15 +49,17 @@ const CreateSpot: React.FC = () => {
 
   const [dramas, setDramas] = useState<Array<{ id: number; tmdb_id: number; title: string; original_title: string; episode_number: number; season_number: number; poster_path: string }>>([]);
 //フォームの宣言
-const { control, handleSubmit, setValue, getValues, register, formState: { errors }  } = useForm({
-  mode: 'onChange',
-  defaultValues: {
-    single: {},
-    drama_id: null,
-    episode: null,
-    key: null,
-  },
-})
+  const { control, handleSubmit, setValue, getValues, register, formState: { errors }  } = useForm({
+    mode: 'onChange',
+    defaultValues: {
+      single: {},
+      drama_id: null,
+      episode: null,
+      key: null,
+      longitude: 0,
+      latitude: 0,
+    },
+  })
   //ドロップボックスのため
   const [imageUrl, setImageUrl] = useState('')
   const [imageKey, setImageKey] = useState('')
@@ -67,7 +69,6 @@ const { control, handleSubmit, setValue, getValues, register, formState: { error
         try {
           // 認証情報を取得
           const accessToken = localStorage.getItem('access-token')
-          console.log(accessToken)
           const client = localStorage.getItem('client')
           const uid = localStorage.getItem('uid')
           // 認証情報をヘッダーに設定
@@ -163,6 +164,8 @@ const { control, handleSubmit, setValue, getValues, register, formState: { error
     if (newValue !== null) {
       setSelectedDrama(newValue)
       setValue('drama_id', newValue.id)
+      setValue('latitude', 37.5657)
+      setValue('longitude', 126.978)
     } else {
       setSelectedDrama(null)
       setValue('drama_id', null)
@@ -179,11 +182,34 @@ const { control, handleSubmit, setValue, getValues, register, formState: { error
     console.log("これが"+selectedDrama)
   }
 
-
-  const handleUpdateSpot = (data) => {
+  //spotを更新する
+  const handleUpdateSpot = async (data) => {
     const { single, ...formData} = data
-
     console.log(formData)
+    const accessToken = localStorage.getItem('access-token')
+    const client = localStorage.getItem('client')
+    const uid = localStorage.getItem('uid')
+    const authHeaders = {
+      'access-token': accessToken,
+      client,
+      uid,
+    }
+
+    try {
+      const response = await axios({
+        method: 'PUT',
+        url: '/api/v1/spots/{id}',
+        data: formData,
+        headers: {
+          'Content-Type': 'application/json',
+          ...authHeaders,
+        },
+      })
+
+      console.log(response.data)
+    } catch (error) {
+      console.error(error)
+    }
   }
   return (
     <>
@@ -243,10 +269,10 @@ const { control, handleSubmit, setValue, getValues, register, formState: { error
                         name="episode"
                         render={({ field, fieldState }) => (
                           <FormControl fullWidth error={fieldState.invalid}>
-                            <InputLabel id="area-label">地域</InputLabel>
+                            <InputLabel id="area-label">エピソード</InputLabel>
                             <Select
                               labelId="area-label"
-                              label="地域" // フォーカスを外した時のラベルの部分これを指定しないとラベルとコントロール線が被る
+                              label="エピソード" // フォーカスを外した時のラベルの部分これを指定しないとラベルとコントロール線が被る
                               {...field}
                             >
                               <MenuItem value="" sx={{color:'gray'}}>

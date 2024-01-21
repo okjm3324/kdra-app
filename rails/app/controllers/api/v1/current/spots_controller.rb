@@ -16,6 +16,7 @@ class Api::V1::Current::SpotsController < Api::V1::BaseController
   end
 
   def update
+    binding.pry
     spot = current_user.spots.find(params[:id])
     spot.update!(spot_params)
     render json: spot
@@ -24,6 +25,6 @@ class Api::V1::Current::SpotsController < Api::V1::BaseController
   private
 
     def spot_params
-      params.require(:spot).permit(:name, :latitude, :longitude, :address, :status)
+      params.require(:spot).permit(:name, :latitude, :longitude, :address, :status, :user_id, :drama_id, :episode, :key)
     end
 end
