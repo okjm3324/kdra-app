@@ -30,6 +30,7 @@ import SelectBox from '@/components/atoms/SelectBox'
 import FormSelectBox from '@/components/atoms/FormSelectBox'
 import {useDropzone} from 'react-dropzone'
 import camelcaseKeys from 'camelcase-keys'
+import Map from '@/components/atoms/Map'
 
 const StyledImage = styled('img')({
   maxWidth: '100%',
@@ -164,8 +165,6 @@ const CreateSpot: React.FC = () => {
     if (newValue !== null) {
       setSelectedDrama(newValue)
       setValue('drama_id', newValue.id)
-      setValue('latitude', 37.5657)
-      setValue('longitude', 126.978)
     } else {
       setSelectedDrama(null)
       setValue('drama_id', null)
@@ -182,10 +181,10 @@ const CreateSpot: React.FC = () => {
     console.log("これが"+selectedDrama)
   }
 
-  //spotを更新する
+  //formのsubmitを押したときに発火するspotを更新する
   const handleUpdateSpot = async (data) => {
     const { single, ...formData} = data
-    console.log(formData)
+    console.log("フォームデータ：" +formData)
     const accessToken = localStorage.getItem('access-token')
     const client = localStorage.getItem('client')
     const uid = localStorage.getItem('uid')
@@ -194,11 +193,10 @@ const CreateSpot: React.FC = () => {
       client,
       uid,
     }
-
     try {
       const response = await axios({
         method: 'PUT',
-        url: '/api/v1/spots/{id}',
+        url: 'http://localhost:3000/api/v1/current/spots/35',
         data: formData,
         headers: {
           'Content-Type': 'application/json',
@@ -211,6 +209,11 @@ const CreateSpot: React.FC = () => {
       console.error(error)
     }
   }
+  const onClickSetLatLng = (lat, lng) => {
+    setValue('latitude', lat)
+    setValue('longitude', lng)
+  }
+  ////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <>
     <Container style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
@@ -219,7 +222,7 @@ const CreateSpot: React.FC = () => {
         <Autocomplete
       id="combo-box-demo"
       options={dramas}
-      getOptionLabel={(option) => option.title}
+      getOptionLabel={(option) => option.title || ''}
       style={{ width: 300 }}
       renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined"  label="drama title"/>}
       onChange={(e,value)=>handleChangeAutoComplete(value)}
@@ -247,7 +250,7 @@ const CreateSpot: React.FC = () => {
                         {...field}
                         fullWidth
                         options={dramas}
-                        getOptionLabel={(option) => option.title}
+                        getOptionLabel={(option) => option.title || ''}
                         renderInput={(params) => (
                           <TextField {...params} label="drama title" />
                         )}
@@ -327,7 +330,7 @@ const CreateSpot: React.FC = () => {
           <input type="hidden" {...register('key', { required: true })} defaultValue={imageKey} />
           <small className="mb-2 text-red-600 block">{errors.key?.message && <span>This field is required</span>}</small>
         </label>
-
+<Map onClickSetLatLng={onClickSetLatLng }/>
                   <input type="submit" />
                 </form>
               </>
