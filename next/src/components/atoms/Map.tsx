@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-import { GoogleMap, useLoadScript, MarkerF,useJsApiLoader } from '@react-google-maps/api'
-import { useCallback, useRef, useState } from 'react'
-import { InterfaceMap } from '../../styles/googleMapStyles'
-import PlaceInfo from './Placeinfo'
-const googleMapOptions = {
-  styles: InterfaceMap,
-}
-const libraries = ['places']
-=======
 import { GoogleMap, useLoadScript, MarkerF,useJsApiLoader, } from '@react-google-maps/api'
 import { useCallback, useRef, useState } from 'react'
 import { InterfaceMap } from '../../styles/googleMapStyles'
@@ -19,7 +9,6 @@ const googleMapOptions = {
   styles: InterfaceMap,
 }
 const libraries: 'places'[] = ['places']
->>>>>>> 3700004 (MAPプッシュ)
 const options = {
   styles: InterfaceMap,
   disableDefaultUI: true,
@@ -37,17 +26,10 @@ const containerStyle = {
   //ちなみにこのライブラリの地図はmapContainerStyleイベントでしか
   //サイズ変更できません(多分)
 }
-<<<<<<< HEAD
 const marking = {
   lat: 33,
   lng: 33,
 }
-
-const Map = ({spots}) => {
-  const [ markers, setMarkers ] = useState([])
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: '***REMOVED***',
-=======
 
 type Marker = {
   lat: number
@@ -68,7 +50,6 @@ const Map: React.FC<MapProps> = ({ spots, onClickSetLatLng  }) => {
   const [marker, setMarker] = useState<Marker | null>(null)
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY as string,
->>>>>>> 3700004 (MAPプッシュ)
     language: 'ja',
     libraries,
   })
@@ -76,43 +57,6 @@ const Map: React.FC<MapProps> = ({ spots, onClickSetLatLng  }) => {
   const onMapLoad = useCallback((map: google.maps.Map) => {
     mapRef.current = map
   }, [])
-<<<<<<< HEAD
-  const onClickSpot = () => {
-    console.log('clicked')
-  }
-  if (loadError) return 'Error'
-  if (!isLoaded) return 'Load中'
-  return (
-    <>
-      <GoogleMap
-        options={options}
-        center={defaultLatLng}
-        zoom={14} //zoomでデフォルトで表示される地図の範囲を指定します。
-        mapContainerStyle={containerStyle}
-        onClick={(e) => {
-          setMarkers(current => [
-            ...current,
-            {
-              lat:  e.latLng?.lat(),
-              lng: e.latLng?.lng(),
-            }
-          ])
-        }}
-      >
-        {spots.map( spot => {
-          console.log(spot.latitude)
-          return <MarkerF key={spot.name} position={{ lat: spot.latitude, lng: spot.longitude}} label={ spot.name }/>
-        })}
-        { markers.map((marker, index) => {
-          return (
-          <MarkerF 
-                  key={index}
-                  position={{ lat:marker.lat, lng:marker.lng}}
-           />
-           )
-        })}
-         <PlaceInfo />
-=======
 
   if (loadError) return 'Error'
   if (!isLoaded) return 'Load中'
@@ -143,13 +87,8 @@ const Map: React.FC<MapProps> = ({ spots, onClickSetLatLng  }) => {
         {marker && marker.lat !== undefined && marker.lng !== undefined && (
           <MarkerF position={{ lat: marker.lat, lng: marker.lng }} />
         )}
->>>>>>> 3700004 (MAPプッシュ)
       </GoogleMap>
     </>
   )
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 3700004 (MAPプッシュ)
 export default Map
