@@ -19,6 +19,7 @@ Rails.application.routes.draw do
           get :detail_drama
         end
       end
+      resources :images, only: [:create, :show]
     end
   end
 end

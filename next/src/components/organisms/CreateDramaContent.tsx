@@ -14,8 +14,9 @@ import {useTheme } from '@mui/material/styles'
 import Loading from '../atoms/Loading';
 import { useRouter } from 'next/router';
 import { useSnackbarState } from '@/hooks/useGlobalState';
+import { FilterDramaSharp } from '@mui/icons-material';
 
-const CreateDramaContent = ({ setModalOpen }) => {
+const CreateDramaContent = ({ setModalOpen, updateDramaList }) => {
   //現在のパスを取得するために使用
   const router = useRouter()
   //メッセージの表示に使用
@@ -66,6 +67,7 @@ const CreateDramaContent = ({ setModalOpen }) => {
           severity: 'success',
           pathname: router.pathname,
         })
+        updateDramaList(response.data)
         setModalOpen(false)
       })
       .catch((error) => {
