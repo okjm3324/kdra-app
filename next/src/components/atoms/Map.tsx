@@ -31,7 +31,7 @@ const marking = {
 const Map = ({spots}) => {
   const [ markers, setMarkers ] = useState([])
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyBe8mCZ8h2vnUEqjIH3Gy7FXgdjGlkQKH8',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
     language: 'ja',
     libraries,
   })
