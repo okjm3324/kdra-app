@@ -153,6 +153,7 @@ const CreateSpot: React.FC = () => {
       }
     })()
   }, [])
+
   //モーダルのため
   const [modalOpen, setModalOpen] = useState<boolean>(false)
 
