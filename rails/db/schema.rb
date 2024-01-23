@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_14_210504) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_20_165235) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,13 +30,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_14_210504) do
     t.float "latitude", comment: "緯度"
     t.float "longitude", comment: "経度"
     t.string "name", comment: "名前"
-    t.string "image", comment: "イメージパス"
+    t.string "key", comment: "イメージパス"
     t.string "address", comment: "住所"
     t.integer "status", comment: "ステータス（10:未保存, 20:下書き, 30:公開中）"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "drama_id", null: false
+    t.bigint "drama_id"
+    t.integer "episode"
     t.index ["drama_id"], name: "index_spots_on_drama_id"
     t.index ["user_id"], name: "index_spots_on_user_id"
   end

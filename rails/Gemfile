@@ -40,6 +40,7 @@ gem "devise_token_auth"
 gem "enum_help"
 
 gem 'themoviedb-api', '~> 1.4', '>= 1.4.1'
+gem "aws-sdk-s3", "~> 1.88"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem "rack-cors"
