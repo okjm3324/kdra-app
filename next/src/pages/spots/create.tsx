@@ -75,9 +75,14 @@ const CreateSpot: React.FC = () => {
           // 認証情報をヘッダーに設定
           const authHeaders = {
             'access-token': accessToken,
-            'client': client,
-            'uid': uid,
+            client,
+            uid,
           }
+          console.log('リクエスト前の認証情報:', {
+            accessToken: localStorage.getItem('access-token'),
+            client: localStorage.getItem('client'),
+            uid: localStorage.getItem('uid'),
+          });
           // POSTリクエストで署名付きURLを取得
           const response = await axios.post(
             'http://localhost:3000/api/v1/images',
@@ -86,6 +91,11 @@ const CreateSpot: React.FC = () => {
               headers: authHeaders,
             },
           )
+          console.log('リクエスト後の認証情報:', {
+            accessToken: localStorage.getItem('access-token'),
+            client: localStorage.getItem('client'),
+            uid: localStorage.getItem('uid'),
+          });
           const key = response.data.key
           const signedUrl = response.data.signed_url
           // PUTリクエストでファイルをアップロード
@@ -216,17 +226,17 @@ const CreateSpot: React.FC = () => {
   ////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <>
-    <Container style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+    <Container maxWidth="sm">
         <div style={{ padding: 30 }}></div>
         <Box>
-        <Autocomplete
+        {/* <Autocomplete
       id="combo-box-demo"
       options={dramas}
       getOptionLabel={(option) => option.title || ''}
       style={{ width: 300 }}
       renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined"  label="drama title"/>}
       onChange={(e,value)=>handleChangeAutoComplete(value)}
-    />
+    /> */}
 
           <Grid
             container
@@ -235,7 +245,7 @@ const CreateSpot: React.FC = () => {
             justifyContent="left"
           >
             <Grid item xs={1} sm={1} md={1} lg={1} xl={1}></Grid>
-            <Grid item xs={7} sm={7} md={7} lg={7} xl={7}>
+            <Grid item xs={12} sm={7} md={7} lg={7} xl={7}>
               <>
                 <form onSubmit={handleSubmit(handleUpdateSpot)}>
                   <Typography gutterBottom variant="h4" component="h2">
@@ -258,6 +268,9 @@ const CreateSpot: React.FC = () => {
                       />
                     )}
                   />
+                  <Button variant="contained" onClick={handleOpenModal}>
+                    ドラマがない場合
+                  </Button>
                   <Box sx={{ mt: 5 }} />
                   {selectedDrama && (
                     <>
@@ -330,16 +343,59 @@ const CreateSpot: React.FC = () => {
           <input type="hidden" {...register('key', { required: true })} defaultValue={imageKey} />
           <small className="mb-2 text-red-600 block">{errors.key?.message && <span>This field is required</span>}</small>
         </label>
-<Map onClickSetLatLng={onClickSetLatLng }/>
+
+
+
+        <Controller
+        control={control}
+        name="files"
+        defaultValue={[]}
+        render={({ field: { onChange, onBlur, value } }) => {
+          const { getRootProps, getInputProps } = useDropzone({
+            onDrop,
+            onBlur,
+            onChange: event => {
+              onChange(event);
+              onDrop(event.target.files);
+            }
+          });
+
+          return (
+            <Paper
+              variant="outlined"
+              {...getRootProps()}
+              sx={{
+                border: '2px dashed #c5cae9',
+                bgcolor: 'background.paper',
+                p: 2,
+                mb: 2,
+                textAlign: 'center',
+                cursor: 'pointer',
+                '&:hover': {
+                  bgcolor: '#e8eaf6',
+                },
+              }}
+            >
+              <input {...getInputProps()} />
+              <Typography>ファイルをここにドロップ、またはクリックして選択してください。</Typography>
+            </Paper>
+          );
+        }}
+      />
+      <input type="hidden" {...register('key', { required: true })} defaultValue={imageKey} />
+      {errors.key && <Typography color="error">This field is required</Typography>}
+        
+
+
+
+<Map onClickSetLatLng={onClickSetLatLng} />
                   <input type="submit" />
                 </form>
               </>
             </Grid>
           </Grid>
         </Box>
-        <Button variant="contained" onClick={handleOpenModal}>
-          ドラマを追加する
-        </Button>
+
         <Modal open={modalOpen} onClose={handleCloseModal}>
           <CreateDramaContent setModalOpen={setModalOpen} updateDramaList={updateDramaList} />
         </Modal>
