@@ -268,9 +268,11 @@ const CreateSpot: React.FC = () => {
                       />
                     )}
                   />
-                  <Button variant="contained" onClick={handleOpenModal}>
-                    ドラマがない場合
-                  </Button>
+                  <Box sx={{ textAlign: 'right', mt:0.5 }}>
+                    <Button variant="contained" onClick={handleOpenModal}>
+                      ドラマがない場合
+                    </Button>
+                  </Box>
                   <Box sx={{ mt: 5 }} />
                   {selectedDrama && (
                     <>
@@ -337,11 +339,6 @@ const CreateSpot: React.FC = () => {
                         />
                       </Card>
                     )}
-          <div className="border-dashed border-2 h-32 rounded flex justify-center items-center" {...getRootProps()} >
-            <input {...getInputProps()} /><p className="block text-gray-400">Drop the files here ...</p>
-          </div>
-          <input type="hidden" {...register('key', { required: true })} defaultValue={imageKey} />
-          <small className="mb-2 text-red-600 block">{errors.key?.message && <span>This field is required</span>}</small>
         </label>
 
 
@@ -377,7 +374,7 @@ const CreateSpot: React.FC = () => {
               }}
             >
               <input {...getInputProps()} />
-              <Typography>ファイルをここにドロップ、またはクリックして選択してください。</Typography>
+              <Typography>スポットの画像をここにドロップ、またはクリックして選択してください。</Typography>
             </Paper>
           );
         }}
@@ -399,30 +396,6 @@ const CreateSpot: React.FC = () => {
         <Modal open={modalOpen} onClose={handleCloseModal}>
           <CreateDramaContent setModalOpen={setModalOpen} updateDramaList={updateDramaList} />
         </Modal>
-        <Box>
-        <Box width={180} height={180}>
-        <Paper
-          variant="outlined"
-          square
-          {...getRootProps()}
-          style={{
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            padding: 10,
-          }}
-        >
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <Typography>Drop the files here ...</Typography>
-          ) : (
-            <Typography>
-              Drag 'n' drop some files here, or click to select files
-            </Typography>
-          )}
-        </Paper>
-      </Box>
-      </Box>
       </Container>
     </>
   )
