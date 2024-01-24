@@ -59,8 +59,13 @@ const CreateSpot: React.FC = () => {
       key: null,
       longitude: 0,
       latitude: 0,
+      address: '',
     },
   })
+  //アドレスセッター
+  const setAddress = (address: string): void => {
+    setValue('address', address)
+  }
   //ドロップボックスのため
   const [imageUrl, setImageUrl] = useState('')
   const [imageKey, setImageKey] = useState('')
@@ -386,7 +391,7 @@ const CreateSpot: React.FC = () => {
 
 
 
-<Map onClickSetLatLng={onClickSetLatLng} />
+<Map onClickSetLatLng={onClickSetLatLng} setAddress={setAddress} />
                   <input type="submit" />
                 </form>
               </>
