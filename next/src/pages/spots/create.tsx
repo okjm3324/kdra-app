@@ -1,4 +1,4 @@
-import { LoadingButton } from '@mui/lab'
+import { LoadingButton, } from '@mui/lab'
 import {
   Grid,
   Button,
@@ -16,29 +16,35 @@ import {
   CardMedia,
   Container,
   styled,
+  Switch,
+  FormControlLabel,
 } from '@mui/material'
 import axios, { AxiosResponse, AxiosError } from 'axios'
+import camelcaseKeys from 'camelcase-keys'
 import type { NextPage } from 'next'
 import React, { useEffect, useState, useCallback } from 'react'
+import { useDropzone } from 'react-dropzone'
 import { useForm, Controller } from 'react-hook-form'
 import useSWR, { mutate } from 'swr'
 import Modal from '../../components/molecules/Modal'
 import DramaCard from '../../components/atoms/DramaCard'
-import CreateDramaContent from '@/components/organisms/CreateDramaContent'
-import { fetcher } from '@/utils'
-import SelectBox from '@/components/atoms/SelectBox'
 import FormSelectBox from '@/components/atoms/FormSelectBox'
-import {useDropzone} from 'react-dropzone'
-import camelcaseKeys from 'camelcase-keys'
 import Map from '@/components/atoms/Map'
+import CreateDramaContent from '@/components/organisms/CreateDramaContent'
+import { Spot } from '@/types/spot'
+import { fetcher } from '@/utils'
 
-const StyledImage = styled('img')({
-  maxWidth: '100%',
-  height: 'auto',
-  objectFit: 'contain'
-})
+enum Status {
+  Unsaved = 10,
+  Draft = 20,
+  Published = 30,
+}
 
 const CreateSpot: React.FC = () => {
+  //編集するスポットを格納
+  const [unsavedSpot, setUnsavedSpot] = useState<Spot | null>(null)
+  // 公開か下書きかのステイト
+  const [status, setStatus] = useState(Status.Unsaved)
   const [open, setOpen] = useState<boolean>(false)
   const [selectedDrama, setSelectedDrama] = useState(null)
   const [selectedEpisode, setSelectedEpisode] = useState(1)
@@ -48,9 +54,26 @@ const CreateSpot: React.FC = () => {
   const { data, error, isValidating } = useSWR(url, fetcher)
   const isLoading: boolean = isValidating
 
-  const [dramas, setDramas] = useState<Array<{ id: number; tmdb_id: number; title: string; original_title: string; episode_number: number; season_number: number; poster_path: string }>>([]);
-//フォームの宣言
-  const { control, handleSubmit, setValue, getValues, register, formState: { errors }  } = useForm({
+  const [dramas, setDramas] = useState<
+    Array<{
+      id: number
+      tmdb_id: number
+      title: string
+      original_title: string
+      episode_number: number
+      season_number: number
+      poster_path: string
+    }>
+  >([])
+  //フォームの宣言
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    getValues,
+    register,
+    formState: { errors },
+  } = useForm({
     mode: 'onChange',
     defaultValues: {
       single: {},
@@ -59,8 +82,21 @@ const CreateSpot: React.FC = () => {
       key: null,
       longitude: 0,
       latitude: 0,
+      address: '',
+      status: Status.Unsaved,
     },
   })
+  //アドレスセッター
+  const setAddress = (address: string): void => {
+    setValue('address', address)
+  }
+  //Statusセッター
+  const handleToggleStatus = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newStatus = e.target.checked ? Status.Published : Status.Draft
+    setValue('status', newStatus)
+    setStatus(newStatus)
+    console.log(newStatus)
+  }
   //ドロップボックスのため
   const [imageUrl, setImageUrl] = useState('')
   const [imageKey, setImageKey] = useState('')
@@ -82,7 +118,7 @@ const CreateSpot: React.FC = () => {
             accessToken: localStorage.getItem('access-token'),
             client: localStorage.getItem('client'),
             uid: localStorage.getItem('uid'),
-          });
+          })
           // POSTリクエストで署名付きURLを取得
           const response = await axios.post(
             'http://localhost:3000/api/v1/images',
@@ -95,7 +131,7 @@ const CreateSpot: React.FC = () => {
             accessToken: localStorage.getItem('access-token'),
             client: localStorage.getItem('client'),
             uid: localStorage.getItem('uid'),
-          });
+          })
           const key = response.data.key
           const signedUrl = response.data.signed_url
           // PUTリクエストでファイルをアップロード
@@ -125,12 +161,10 @@ const CreateSpot: React.FC = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
   useEffect(() => {
-    console.log('実行')
+    //DBのドラマを取得=>オートコンプリートへ格納
     ;(async () => {
       try {
-        console.log('リクエスト前')
         const response = await axios.get('http://localhost:3000/api/v1/dramas/')
-        console.log('リクエスト後')
         const newDramas = response.data.map((drama) => ({
           title: drama.title,
           id: drama.id,
@@ -147,6 +181,24 @@ const CreateSpot: React.FC = () => {
           'access-token': localStorage.getItem('access-token'),
           client: localStorage.getItem('client'),
           uid: localStorage.getItem('uid'),
+        }
+        const spotResponse = await axios.get(
+          'http://localhost:3000/api/v1/current/spots',
+          {
+            headers: headers,
+          },
+        )
+        const unsavedSpot = spotResponse.data.find((spot) => spot.status === 'unsaved')
+        if (!unsavedSpot) {
+          const spotCreationResponse = await axios.post('http://localhost:3000/api/v1/current/spots', {}, {
+              headers: headers,
+            },
+          )
+          // 新しく作成した未保存のスポットをセット
+          setUnsavedSpot(spotCreationResponse.data)
+        } else {
+          // 既存の未保存のスポットをセット
+          setUnsavedSpot(unsavedSpot)
         }
       } catch (error) {
         console.error('リクエストエラー', error)
@@ -187,15 +239,12 @@ const CreateSpot: React.FC = () => {
   }
   //テストオートコンプリート
   const handleChangeAutoComplete = (value) => {
-    console.log("バリュー" + value)
     setSelectedDrama(value)
-    console.log("これが"+selectedDrama)
   }
 
   //formのsubmitを押したときに発火するspotを更新する
   const handleUpdateSpot = async (data) => {
     const { single, ...formData} = data
-    console.log("フォームデータ：" +formData)
     const accessToken = localStorage.getItem('access-token')
     const client = localStorage.getItem('client')
     const uid = localStorage.getItem('uid')
@@ -207,7 +256,7 @@ const CreateSpot: React.FC = () => {
     try {
       const response = await axios({
         method: 'PUT',
-        url: 'http://localhost:3000/api/v1/current/spots/35',
+        url: `http://localhost:3000/api/v1/current/spots/${unsavedSpot.id}`,
         data: formData,
         headers: {
           'Content-Type': 'application/json',
@@ -227,32 +276,22 @@ const CreateSpot: React.FC = () => {
   ////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <>
-    <Container maxWidth="sm">
+      <Container maxWidth="sm" sx={{justifyContent: 'center'}}>
         <div style={{ padding: 30 }}></div>
         <Box>
-        {/* <Autocomplete
-      id="combo-box-demo"
-      options={dramas}
-      getOptionLabel={(option) => option.title || ''}
-      style={{ width: 300 }}
-      renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined"  label="drama title"/>}
-      onChange={(e,value)=>handleChangeAutoComplete(value)}
-    /> */}
-
           <Grid
             container
             rowSpacing={2}
             columnSpacing={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }}
-            justifyContent="left"
+            justifyContent="center"
           >
-            <Grid item xs={1} sm={1} md={1} lg={1} xl={1}></Grid>
             <Grid item xs={12} sm={7} md={7} lg={7} xl={7}>
               <>
                 <form onSubmit={handleSubmit(handleUpdateSpot)}>
                   <Typography gutterBottom variant="h4" component="h2">
                     Drama Select
                   </Typography>
-                  <input type="hidden" {...register('drama_id')}  />
+                  <input type="hidden" {...register('drama_id')} />
                   <Controller
                     control={control}
                     name="single"
@@ -269,7 +308,7 @@ const CreateSpot: React.FC = () => {
                       />
                     )}
                   />
-                  <Box sx={{ textAlign: 'right', mt:0.5 }}>
+                  <Box sx={{ textAlign: 'right', mt: 0.5 }}>
                     <Button variant="contained" onClick={handleOpenModal}>
                       ドラマがない場合
                     </Button>
@@ -313,8 +352,8 @@ const CreateSpot: React.FC = () => {
                       <Controller
                         control={control}
                         name="name"
-                        render={( {field} ) => ( 
-                         <TextField 
+                        render={({ field }) => (
+                          <TextField
                             {...field}
                             label="スポット名"
                             variant="outlined"
@@ -327,7 +366,9 @@ const CreateSpot: React.FC = () => {
                   <label className="block mb-4">
                     <span>画像</span>
                     {imageKey && (
-                      <Card sx={{ width: 200, height: 200, overflow: 'hidden' }}>
+                      <Card
+                        sx={{ width: 200, height: 200, overflow: 'hidden' }}
+                      >
                         <CardMedia
                           component="img"
                           image={imageUrl}
@@ -340,54 +381,89 @@ const CreateSpot: React.FC = () => {
                         />
                       </Card>
                     )}
-        </label>
-
-
-
-        <Controller
-        control={control}
-        name="files"
-        defaultValue={[]}
-        render={({ field: { onChange, onBlur, value } }) => {
-          const { getRootProps, getInputProps } = useDropzone({
-            onDrop,
-            onBlur,
-            onChange: event => {
-              onChange(event);
-              onDrop(event.target.files);
-            }
-          });
-
-          return (
-            <Paper
-              variant="outlined"
-              {...getRootProps()}
-              sx={{
-                border: '2px dashed #c5cae9',
-                bgcolor: 'background.paper',
-                p: 2,
-                mb: 2,
-                textAlign: 'center',
-                cursor: 'pointer',
-                '&:hover': {
-                  bgcolor: '#e8eaf6',
-                },
-              }}
-            >
-              <input {...getInputProps()} />
-              <Typography>スポットの画像をここにドロップ、またはクリックして選択してください。</Typography>
-            </Paper>
-          );
-        }}
-      />
-      <input type="hidden" {...register('key', { required: true })} defaultValue={imageKey} />
-      {errors.key && <Typography color="error">This field is required</Typography>}
-        
-
-
-
-<Map onClickSetLatLng={onClickSetLatLng} />
-                  <input type="submit" />
+                  </label>
+                  <Controller
+                    control={control}
+                    name="files"
+                    defaultValue={[]}
+                    render={({ field: { onChange, onBlur, value } }) => {
+                      const { getRootProps, getInputProps } = useDropzone({
+                        onDrop,
+                        onBlur,
+                        onChange: event => {
+                          onChange(event)
+                          onDrop(event.target.files)
+                        },
+                      })
+                      return (
+                        <Paper
+                          variant="outlined"
+                          {...getRootProps()}
+                          sx={{
+                            border: '2px dashed #c5cae9',
+                            bgcolor: 'background.paper',
+                            p: 2,
+                            mb: 2,
+                            textAlign: 'center',
+                            cursor: 'pointer',
+                            '&:hover': {
+                              bgcolor: '#e8eaf6',
+                            },
+                          }}
+                        >
+                          <input {...getInputProps()} />
+                          {imageKey ? 
+                          <Card
+                          sx={{ width: 200, height: 200, overflow: 'hidden' }}
+                        >
+                          <CardMedia
+                            component="img"
+                            image={imageUrl}
+                            alt="画像"
+                            sx={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                            }}
+                          />
+                        </Card> 
+                          : <Typography>スポットの画像をここにドロップ、またはクリックして選択してください。</Typography>}
+                        </Paper>
+                      )
+                    }}
+                  />
+                  <input
+                    type="hidden"
+                    {...register('key', { required: true })}
+                    defaultValue={imageKey}
+                  />
+                  {errors.key && (
+                    <Typography color="error">
+                      This field is required
+                    </Typography>
+                  )}
+                  <Map
+                    onClickSetLatLng={onClickSetLatLng}
+                    setAddress={setAddress}
+                  />
+                  <Grid item xs={12}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={getValues('status') === Status.Published}
+                          onChange={handleToggleStatus}
+                          name="published"
+                          color="primary"
+                        />
+                      }
+                      label={status === Status.Published ? '公開' : '下書き'}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button type="submit" variant="contained" color="primary">
+                      送信
+                    </Button>
+                  </Grid>
                 </form>
               </>
             </Grid>
@@ -395,7 +471,10 @@ const CreateSpot: React.FC = () => {
         </Box>
 
         <Modal open={modalOpen} onClose={handleCloseModal}>
-          <CreateDramaContent setModalOpen={setModalOpen} updateDramaList={updateDramaList} />
+          <CreateDramaContent
+            setModalOpen={setModalOpen}
+            updateDramaList={updateDramaList}
+          />
         </Modal>
       </Container>
     </>

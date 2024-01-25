@@ -6,13 +6,15 @@ import usePlacesAutocomplete, {
   getLatLng,
 } from 'use-places-autocomplete'
 import { Autocomplete, TextField } from '@mui/material'
+import { reverseGeocode } from '@/utils/geocode'
 
 type SearchLocationProps = {
   setCoordinates: (lat: number, lng: number) => void
   onClickSetLatLng: (lat: number, lng: number) => void
+  setAddress: (address: string) => void
 }
 
-const SearchLocation: React.FC<SearchLocationProps> = ({ setCoordinates, onClickSetLatLng }) => {
+const SearchLocation: React.FC<SearchLocationProps> = ({ setCoordinates, onClickSetLatLng, setAddress }) => {
   const {
     ready,
     value,
@@ -39,6 +41,9 @@ const SearchLocation: React.FC<SearchLocationProps> = ({ setCoordinates, onClick
       console.log(lat)
       setCoordinates(lat, lng)
       onClickSetLatLng(lat, lng)
+      const formattedAddress = await reverseGeocode(lat, lng)
+      setAddress(formattedAddress)
+      console.log(formattedAddress)
     } catch (error) {
       if (error === 'ZERO_RESULTS') {
         console.log('結果が見つかりませんでした')
