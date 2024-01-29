@@ -1,0 +1,121 @@
+import { GoogleMap, useLoadScript, MarkerF,useJsApiLoader, } from '@react-google-maps/api'
+import { useCallback, useRef, useState, useEffect } from 'react'
+import { InterfaceMap } from '../../styles/googleMapStyles'
+import PlaceInfo from './Placeinfo'
+import usePlacesAutoComplete, {getGeoCode, getLatLng} from 'use-places-autocomplete'
+import { Input, Popover } from '@mui/material'
+import Modal from '../../components/molecules/Modal'
+import SpotDetailContent from '../organisms/SpotDetailContent'
+import { SportsTennis } from '@mui/icons-material'
+
+const googleMapOptions = {
+  styles: InterfaceMap,
+}
+const libraries: 'places'[] = ['places']
+const options = {
+  styles: InterfaceMap,
+  disableDefaultUI: true,
+  zoomControl: true,
+  scrollwheel: true,
+}
+const defaultLatLng = {
+  lat: 37.55612564086914,
+  lng: 126.97232055664062,
+}
+const containerStyle = {
+  width: '100%',
+  height: '400px',
+  //地図の幅と高さを連想配列にします。
+  //ちなみにこのライブラリの地図はmapContainerStyleイベントでしか
+  //サイズ変更できません(多分)
+}
+type Marker = {
+  lat: number
+  lng: number
+}
+const marking = {
+  lat: 33,
+  lng: 33,
+}
+
+type MapProps = {
+  spots?: {
+    latitude: number
+    longitude: number
+    name: string
+    drama_id: number
+  }[]
+  selectedDramaId?: number
+}
+
+const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [clickedMarker, setClickedMarker] = useState({})
+
+  const [marker, setMarker] = useState<Marker | null>(null)
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY as string,
+    language: 'ja',
+    libraries,
+  })
+  useEffect(() => {
+    console.log('spots prop has changed:', spots)
+  }, [spots])
+  const mapRef = useRef<google.maps.Map>()
+  const onMapLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map
+  }, [])
+
+  if (loadError) return 'Error'
+  if (!isLoaded) return 'Load中'
+  const handleOpenModal = (): void => {
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = (): void => {
+    setIsModalOpen(false)
+    setClickedMarker({})
+  }
+
+  //clickedMarkerセッター
+  const setterClickedMarker = (spot) => {
+    setClickedMarker(spot)
+    console.log(spot)
+    handleOpenModal()
+  }
+
+  return (
+    <>
+      <GoogleMap
+        options={options}
+        center={defaultLatLng}
+        zoom={14} //zoomでデフォルトで表示される地図の範囲を指定します。
+        mapContainerStyle={containerStyle}
+      >
+          {spots && spots
+            .filter(spot => {
+              const shouldDisplay = selectedDramaId === null || spot.dramaId === selectedDramaId;
+              return shouldDisplay
+            })
+            .map((spot, index) => {
+            if (spot.status === "unsaved") return null
+              return (
+                <MarkerF
+                  key={spot.id}
+                  position={{ lat:spot.latitude, lng:spot.longitude}}
+                  onClick={() => setterClickedMarker(spot)}
+                />
+              )
+            })}
+        <PlaceInfo />
+      </GoogleMap>
+      {isModalOpen && (
+        <Modal title={"詳細"} open={isModalOpen} onClose={handleCloseModal}>
+         <SpotDetailContent spot={clickedMarker}/>
+        </Modal>
+      )}
+    </>
+  )
+}
+
+export default MarkedMap

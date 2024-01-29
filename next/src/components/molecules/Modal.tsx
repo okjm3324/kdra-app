@@ -6,7 +6,7 @@ const Modal = ({ open, onClose, children, title }) => {
     <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="xl">
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        {children}
+       {children}
       </DialogContent>
     </Dialog>
   )

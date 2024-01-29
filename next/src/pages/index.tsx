@@ -1,4 +1,4 @@
-import { Box, Grid, Container, Pagination } from '@mui/material'
+import { Box, Grid, Container, Pagination, Select, MenuItem } from '@mui/material'
 import camelcaseKeys from 'camelcase-keys'
 import type { NextPage } from 'next'
 import Link from 'next/link'
@@ -10,13 +10,15 @@ import Map from '@/components/atoms/Map'
 import Error from '@/components/templates/Error'
 import { styles } from '@/styles'
 import { fetcher } from '@/utils'
-
+import MarkedMap from '@/components/atoms/MarkedMap'
+import { useState } from 'react'
 type SpotProps = {
   id: number
   name: string
   latitude: number
   longitude: number
   address: string
+  key: string
   createdAt: string
   user: {
     name: string
@@ -26,21 +28,33 @@ const Index: NextPage = () => {
   const router = useRouter()
   const page = 'page' in router.query ? Number(router.query.page) : 1
   const url = process.env.NEXT_PUBLIC_API_BASE_URL + '/spots/?page=' + page
+  const [selectedDramaId, setSelectedDramaId] = useState<number | null>(null)
 
   const { data, error } = useSWR(url, fetcher)
   if (error) return <Error />
   if (!data) return <Loading />
 
   const spots = camelcaseKeys(data.spots)
+  console.log(spots)
   const meta = camelcaseKeys(data.meta)
-
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     router.push('/?page=' + value)
+  }
+
+  const handleDramaChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedDramaId(event.target.value as number)
+    console.log(selectedDramaId)
   }
   return (
     <Box css={styles.pageMinHeight} sx={{ backgroundColor: '#e6f2ff' }}>
       <Container maxWidth="md" sx={{ pt: 6 }}>
-        <Map spots={spots} />
+        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        <Select value={selectedDramaId} onChange={handleDramaChange} sx={{ width: '200px', backgroundColor: '#fff' , marginBottom: '20px' }} >
+            <MenuItem value={12}>ウヨンウ</MenuItem>
+            <MenuItem value={13}>25,21</MenuItem>
+          </Select>
+        </Box>
+        <MarkedMap spots={spots} selectedDramaId={selectedDramaId} />
         <Grid container spacing={4}>
           {spots.map((spot: SpotProps, i: number) => (
             <Grid key={i} item xs={12} md={6}>
@@ -51,6 +65,7 @@ const Index: NextPage = () => {
                   address={spot.address}
                   latitude={spot.latitude}
                   longitude={spot.longitude}
+                  imageKey={spot.key}
                 />
               </Link>
             </Grid>
