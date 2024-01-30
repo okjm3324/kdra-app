@@ -1,5 +1,5 @@
 class SpotSerializer < ActiveModel::Serializer
-  attributes :id, :name, :latitude, :longitude, :address, :created_at, :status
+  attributes :id, :name, :latitude, :longitude, :address, :created_at, :status, :key, :episode, :drama_id, :user_id
   belongs_to :user, serializer: UserSerializer
 
   def status

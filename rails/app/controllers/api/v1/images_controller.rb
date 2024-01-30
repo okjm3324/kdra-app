@@ -4,9 +4,12 @@ class  Api::V1::ImagesController < Api::V1::BaseController
   # GET /images/1
   # GET /images/1.json
   def show
-    @key = params[:id]
-    @signed_url = Image.signed_url(@key, :get_object)
-    render json: { key: @key, signed_url: @signed_url }, status: :ok
+    #@key = params[:id]
+    #@signed_url = Image.signed_url(@key, :get_object)
+    #render json: { key: @key, signed_url: @signed_url }, status: :ok
+    filename = params[:id]
+    url = Image.cdn_url(filename)
+    render json: {url: url}
   end
 
   # POST /images
