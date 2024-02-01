@@ -5,7 +5,7 @@ import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk'
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike'
 import { useState, useEffect } from 'react'
 
-const SpotDetailContent = ({ spot }) => {
+const SpotDetailContent = ({ spot, location }) => {
   const [selectedIcon, setSelectedIcon] = useState('public')
   const imageUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL + spot.key
   //const naverUrl = `nmap://route/${selectedIcon}?slat=37.5657&slng=126.978&sname=%EC%84%9C%EC%9A%B8%EB%8C%80%ED%95%99%EA%B5%90&dlat=${spot.latitude}&dlng=${spot.longitude}&dname=${spot.name}&appname=com.example.myapp`
@@ -13,8 +13,9 @@ const SpotDetailContent = ({ spot }) => {
   const [naverUrl, setNaverUrl] = useState('')
   useEffect(() => {
     const timestamp = new Date().getTime()
-    setNaverUrl(`nmap://route/${selectedIcon}?slat=37.5657&slng=126.978&sname=%EC%84%9C%EC%9A%B8%EB%8C%80%ED%95%99%EA%B5%90&dlat=${spot.latitude}&dlng=${spot.longitude}&dname=${spot.name}&appname=com.example.myapp`)
+    setNaverUrl(`nmap://route/${selectedIcon}?slat=${location.lat}&slng=${location.lng}&sname=%EC%84%9C%EC%9A%B8%EB%8C%80%ED%95%99%EA%B5%90&dlat=${spot.latitude}&dlng=${spot.longitude}&dname=${spot.name}&appname=kandramap`)
   }, [selectedIcon, spot])
+console.log(naverUrl)
   return (
     <Container>
       <Box

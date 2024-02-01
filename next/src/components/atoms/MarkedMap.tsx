@@ -1,4 +1,4 @@
-import { GoogleMap, useLoadScript, MarkerF,useJsApiLoader, } from '@react-google-maps/api'
+import { GoogleMap, useLoadScript, MarkerF, useJsApiLoader, Circle } from '@react-google-maps/api'
 import { useCallback, useRef, useState, useEffect } from 'react'
 import { InterfaceMap } from '../../styles/googleMapStyles'
 import PlaceInfo from './Placeinfo'
@@ -19,10 +19,7 @@ const options = {
   zoomControl: true,
   scrollwheel: true,
 }
-const defaultLatLng = {
-  lat: 37.55612564086914,
-  lng: 126.97232055664062,
-}
+
 const containerStyle = {
   width: '100%',
   height: '400px',
@@ -33,10 +30,6 @@ const containerStyle = {
 type Marker = {
   lat: number
   lng: number
-}
-const marking = {
-  lat: 33,
-  lng: 33,
 }
 
 type MapProps = {
@@ -83,6 +76,7 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
     console.log(spot)
     handleOpenModal()
   }
+  console.log(location)
 
   return (
     <>
@@ -92,6 +86,18 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
         zoom={14} //zoomでデフォルトで表示される地図の範囲を指定します。
         mapContainerStyle={containerStyle}
       >
+        {/* 現在地を示すマーカー */}
+        <MarkerF
+          position={location}
+          icon={{
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 7, // 円のサイズ
+            fillColor: "#4285F4", // 円の色
+            fillOpacity: 1, // 円の不透明度
+            strokeWeight: 2, // 円の境界線の太さ
+            strokeColor: "#FFFFFF" // 円の境界線の色
+          }}
+        />
           {spots && spots
             .filter(spot => {
               const shouldDisplay = selectedDramaId === null || spot.dramaId === selectedDramaId;
@@ -111,7 +117,7 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
       </GoogleMap>
       {isModalOpen && (
         <Modal title={"詳細"} open={isModalOpen} onClose={handleCloseModal}>
-         <SpotDetailContent spot={clickedMarker}/>
+          <SpotDetailContent spot={clickedMarker} location={location} />
         </Modal>
       )}
     </>
