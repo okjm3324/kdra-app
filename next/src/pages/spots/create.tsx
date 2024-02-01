@@ -49,7 +49,9 @@ const CreateSpot: React.FC = () => {
   const [selectedDrama, setSelectedDrama] = useState(null)
   const [selectedEpisode, setSelectedEpisode] = useState(1)
   const [keyword, setKeyword] = useState<string>('')
-  const url: string = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${keyword}`
+  const url: string =
+    process.env.NEXT_PUBLIC_API_BASE_URL +
+    `/dramas/search_drama?keyword=${keyword}`
   const poster_url: string = 'https://image.tmdb.org/t/p/w500'
   const { data, error, isValidating } = useSWR(url, fetcher)
   const isLoading: boolean = isValidating
@@ -121,7 +123,7 @@ const CreateSpot: React.FC = () => {
           })
           // POSTリクエストで署名付きURLを取得
           const response = await axios.post(
-            'http://localhost:3000/api/v1/images',
+            process.env.NEXT_PUBLIC_API_BASE_URL + '/images',
             {},
             {
               headers: authHeaders,
@@ -142,7 +144,7 @@ const CreateSpot: React.FC = () => {
           })
           // GETリクエストで署名付きURLを取得して画像を表示
           const res = await axios.get(
-            `http://localhost:3000/api/v1/images/${key}`,
+            process.env.NEXT_PUBLIC_API_BASE_URL + `/images/${key}`,
             {
               headers: authHeaders,
             },
@@ -164,7 +166,9 @@ const CreateSpot: React.FC = () => {
     //DBのドラマを取得=>オートコンプリートへ格納
     ;(async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/dramas/')
+        const response = await axios.get(
+          process.env.NEXT_PUBLIC_API_BASE_URL + '/dramas/',
+        )
         const newDramas = response.data.map((drama) => ({
           title: drama.title,
           id: drama.id,
@@ -183,14 +187,17 @@ const CreateSpot: React.FC = () => {
           uid: localStorage.getItem('uid'),
         }
         const spotResponse = await axios.get(
-          'http://localhost:3000/api/v1/current/spots',
+          process.env.NEXT_PUBLIC_API_BASE_URL + '/current/spots',
           {
             headers: headers,
           },
         )
         const unsavedSpot = spotResponse.data.find((spot) => spot.status === 'unsaved')
         if (!unsavedSpot) {
-          const spotCreationResponse = await axios.post('http://localhost:3000/api/v1/current/spots', {}, {
+          const spotCreationResponse = await axios.post(
+            process.env.NEXT_PUBLIC_API_BASE_URL + '/current/spots',
+            {},
+            {
               headers: headers,
             },
           )
@@ -256,7 +263,9 @@ const CreateSpot: React.FC = () => {
     try {
       const response = await axios({
         method: 'PUT',
-        url: `http://localhost:3000/api/v1/current/spots/${unsavedSpot.id}`,
+        url:
+          process.env.NEXT_PUBLIC_API_BASE_URL +
+          `/current/spots/${unsavedSpot.id}`,
         data: formData,
         headers: {
           'Content-Type': 'application/json',

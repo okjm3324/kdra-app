@@ -34,7 +34,9 @@ const Index: NextPage = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/dramas/')
+        const response = await axios.get(
+          process.env.NEXT_PUBLIC_API_BASE_URL + '/dramas/',
+        )
         const newDramas = response.data.map((drama) => ({
           title: drama.title,
           id: drama.id,
