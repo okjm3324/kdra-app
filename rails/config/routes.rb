@@ -1,6 +1,25 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+  namespace :api do
+    namespace :v1 do
+      get "health_check", to: "health_check#index"
+      mount_devise_token_auth_for "User", at: "auth"
+      namespace :user do
+        resource :confirmations, only: [:update]
+      end
+      namespace :current do
+        resource :user, only: [:show]
+        resources :spots, only: [:index, :show, :create, :update]
+      end
+      resources :spots, only: [:index, :show]
+      resources :dramas, only: [:index, :show, :create] do
+        collection do
+          get :search_drama
+          get :detail_drama
+        end
+      end
+      resources :images, only: [:create, :show]
+    end
+  end
 end
