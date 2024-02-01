@@ -7,6 +7,7 @@ import { Input, Popover } from '@mui/material'
 import Modal from '../../components/molecules/Modal'
 import SpotDetailContent from '../organisms/SpotDetailContent'
 import { SportsTennis } from '@mui/icons-material'
+import useLocationWithFallback  from '../../hooks/useLocationWithFallback'
 
 const googleMapOptions = {
   styles: InterfaceMap,
@@ -51,7 +52,7 @@ type MapProps = {
 const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [clickedMarker, setClickedMarker] = useState({})
-
+  const location = useLocationWithFallback()
   const [marker, setMarker] = useState<Marker | null>(null)
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY as string,
@@ -65,7 +66,6 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
   const onMapLoad = useCallback((map: google.maps.Map) => {
     mapRef.current = map
   }, [])
-
   if (loadError) return 'Error'
   if (!isLoaded) return 'Load中'
   const handleOpenModal = (): void => {
@@ -88,7 +88,7 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
     <>
       <GoogleMap
         options={options}
-        center={defaultLatLng}
+        center={location}
         zoom={14} //zoomでデフォルトで表示される地図の範囲を指定します。
         mapContainerStyle={containerStyle}
       >
