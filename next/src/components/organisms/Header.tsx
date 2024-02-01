@@ -130,24 +130,30 @@ const Header = () => {
                       </Typography>
                     </Box>
                     <Divider />
-                    <MenuItem>
-                      <ListItemIcon>
-                        <PersonIcon fontSize="small" />
-                      </ListItemIcon>
-                      プロフィール
-                    </MenuItem>
-                    <MenuItem>
-                      <ListItemIcon>
-                        <ArticleIcon fontSize="small" />
-                      </ListItemIcon>
-                      記事の管理
-                    </MenuItem>
-                    <MenuItem>
-                      <ListItemIcon>
-                        <FavoriteIcon fontSize="small" />
-                      </ListItemIcon>
-                      マイスポット
-                    </MenuItem>
+                    <Link href={'/preparing_screen'}>
+                      <MenuItem>
+                        <ListItemIcon>
+                          <PersonIcon fontSize="small" />
+                        </ListItemIcon>
+                        プロフィール
+                      </MenuItem>
+                    </Link>
+                    <Link href={'/preparing_screen'}>
+                      <MenuItem>
+                        <ListItemIcon>
+                          <ArticleIcon fontSize="small" />
+                        </ListItemIcon>
+                        記事の管理
+                      </MenuItem>
+                    </Link>
+                    <Link href={'/preparing_screen'}>
+                      <MenuItem>
+                        <ListItemIcon>
+                          <FavoriteIcon fontSize="small" />
+                        </ListItemIcon>
+                        マイスポット
+                      </MenuItem>
+                    </Link>
                     <Link href="/sign_out">
                       <MenuItem>
                         <ListItemIcon>

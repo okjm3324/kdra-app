@@ -22,7 +22,9 @@ const SearchDrama = () => {
   const [dramaDetail, setDramaDetail] = useState(null)
   const [selectedTmdbId, setSelectedTmdbId] = useState(null)
   const [keyword, setKeyword] = useState('')
-  const url = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${keyword}`
+  const url =
+    process.env.NEXT_PUBLIC_API_BASE_URL +
+    `/dramas/search_drama?keyword=${keyword}`
   const { data, error, isValidating } = useSWR(url, fetcher)
   const isLoading = isValidating //ボタンのローディングに使用
   //テーマカラーの取得
@@ -42,7 +44,9 @@ const SearchDrama = () => {
   const onClickDataFetch = () => {
     const newKeyword = getValues().single ? getValues().single.toString() : ''
     setKeyword(newKeyword)
-    const newUrl = `http://localhost:3000/api/v1/dramas/search_drama?keyword=${newKeyword}`
+    const newUrl =
+      process.env.NEXT_PUBLIC_API_BASE_URL +
+      `/dramas/search_drama?keyword=${newKeyword}`
     mutate(newUrl)
   }
   //Dramaレコードの作成ハンドラ
