@@ -1,6 +1,16 @@
-import { Select, MenuItem } from '@mui/material';
+import { Select, MenuItem } from '@mui/material'
 
-const FormSelectBox = ({ episodeNumber, value, onChange }) => {
+interface FormSelectBoxProps {
+  episodeNumber: number
+  value: any
+  onChange: (event: React.ChangeEvent<{ value: unknown }>) => void
+}
+
+const FormSelectBox: React.FC<FormSelectBoxProps> = ({
+  episodeNumber,
+  value,
+  onChange,
+}) => {
   return (
     <Select
       id="episode-select"
@@ -14,7 +24,7 @@ const FormSelectBox = ({ episodeNumber, value, onChange }) => {
         </MenuItem>
       ))}
     </Select>
-  );
-};
+  )
+}
 
-export default FormSelectBox;
+export default FormSelectBox
