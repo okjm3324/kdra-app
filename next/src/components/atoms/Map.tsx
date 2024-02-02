@@ -16,20 +16,12 @@ const options = {
   zoomControl: true,
   scrollwheel: true,
 }
-const defaultLatLng = {
-  lat: 37.55612564086914,
-  lng: 126.97232055664062,
-}
 const containerStyle = {
   width: '100%',
   height: '400px',
   //地図の幅と高さを連想配列にします。
   //ちなみにこのライブラリの地図はmapContainerStyleイベントでしか
   //サイズ変更できません(多分)
-}
-const marking = {
-  lat: 33,
-  lng: 33,
 }
 
 type Marker = {

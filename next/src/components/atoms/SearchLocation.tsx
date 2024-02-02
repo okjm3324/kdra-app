@@ -14,7 +14,11 @@ type SearchLocationProps = {
   setAddress: (address: string) => void
 }
 
-const SearchLocation: React.FC<SearchLocationProps> = ({ setCoordinates, onClickSetLatLng, setAddress }) => {
+const SearchLocation: React.FC<SearchLocationProps> = ({
+  setCoordinates,
+  onClickSetLatLng,
+  setAddress,
+}) => {
   const {
     ready,
     value,

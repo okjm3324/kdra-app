@@ -34,10 +34,12 @@ type Marker = {
 
 type MapProps = {
   spots?: {
+    id: number
     latitude: number
     longitude: number
     name: string
-    drama_id: number
+    dramaId: number
+    status: string
   }[]
   selectedDramaId?: number
 }
@@ -71,7 +73,14 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
   }
 
   //clickedMarkerセッター
-  const setterClickedMarker = (spot) => {
+  const setterClickedMarker = (spot: {
+    id: number
+    latitude: number
+    longitude: number
+    name: string
+    dramaId: number
+    status: string
+  }) => {
     setClickedMarker(spot)
     console.log(spot)
     handleOpenModal()
@@ -92,23 +101,25 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
           icon={{
             path: google.maps.SymbolPath.CIRCLE,
             scale: 7, // 円のサイズ
-            fillColor: "#4285F4", // 円の色
+            fillColor: '#4285F4', // 円の色
             fillOpacity: 1, // 円の不透明度
             strokeWeight: 2, // 円の境界線の太さ
-            strokeColor: "#FFFFFF" // 円の境界線の色
+            strokeColor: '#FFFFFF', // 円の境界線の色
           }}
         />
-          {spots && spots
-            .filter(spot => {
-              const shouldDisplay = selectedDramaId === null || spot.dramaId === selectedDramaId;
+        {spots &&
+          spots
+            .filter((spot) => {
+              const shouldDisplay =
+                selectedDramaId === null || spot.dramaId === selectedDramaId
               return shouldDisplay
             })
-            .map((spot, index) => {
-            if (spot.status === "unsaved") return null
+            .map((spot) => {
+              if (spot.status === 'unsaved') return null
               return (
                 <MarkerF
                   key={spot.id}
-                  position={{ lat:spot.latitude, lng:spot.longitude}}
+                  position={{ lat: spot.latitude, lng: spot.longitude }}
                   onClick={() => setterClickedMarker(spot)}
                 />
               )
@@ -116,7 +127,7 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
         <PlaceInfo />
       </GoogleMap>
       {isModalOpen && (
-        <Modal title={"詳細"} open={isModalOpen} onClose={handleCloseModal}>
+        <Modal title={'詳細'} open={isModalOpen} onClose={handleCloseModal}>
           <SpotDetailContent spot={clickedMarker} location={location} />
         </Modal>
       )}

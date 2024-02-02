@@ -6,7 +6,15 @@ import Typography from '@mui/material/Typography'
 import axios from 'axios'
 import * as React from 'react'
 
-type DramaDetail = any
+type DramaDetail = {
+  title: string
+  originalTitle: string
+  tmdbId: number
+  posterPath: string
+  firstAirDate: string
+  episodeNumber: number
+  seasonNumber: number
+}
 type DramaProps = {
   tmdbId: number
   setDramaDetail: React.Dispatch<React.SetStateAction<DramaDetail>>
@@ -22,9 +30,9 @@ const DramaCard = ({
   posterPath,
   title,
   date,
-  selected ,
+  selected,
   setSelectedTmdbId,
-}) => {
+}: DramaProps) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
   const poster_url = 'https://image.tmdb.org/t/p/w92'
   const image_path = poster_url + posterPath
@@ -57,10 +65,19 @@ const DramaCard = ({
       />
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <CardContent sx={{ flex: '1 0 auto' }}>
-          <Typography component="div" variant="h2" style={{ fontSize: '16px', fontWeight: 'bold' }}>
+          <Typography
+            component="div"
+            variant="h2"
+            style={{ fontSize: '16px', fontWeight: 'bold' }}
+          >
             {title}
           </Typography>
-          <Typography variant="subtitle1" color="text.secondary" component="div" style={{ fontSize: '14px'}}>
+          <Typography
+            variant="subtitle1"
+            color="text.secondary"
+            component="div"
+            style={{ fontSize: '14px' }}
+          >
             {date}
           </Typography>
         </CardContent>

@@ -50,11 +50,11 @@ const SearchDrama = () => {
     mutate(newUrl)
   }
   //Dramaレコードの作成ハンドラ
-  const onClickCreateDrama = (dramaDetail) => {
+  const onClickCreateDrama = (dramaDetail: null) => {
     axios({
       method: 'POST',
       url: createUrl,
-      data: { drama: { ...dramaDetail } },
+      data: { drama: { ...(dramaDetail || {}) } },
       headers: headers,
     })
       .then((response) => {
@@ -103,7 +103,12 @@ const SearchDrama = () => {
           onClick={onClickDataFetch}
           loading={isLoading}
           size="large"
-          sx={{ height: '56px', fontWeight: 'bold', color: 'white', marginLeft: 0.5 }}
+          sx={{
+            height: '56px',
+            fontWeight: 'bold',
+            color: 'white',
+            marginLeft: 0.5,
+          }}
         >
           検索
         </LoadingButton>
@@ -112,24 +117,42 @@ const SearchDrama = () => {
       <Box>
         {data && data.length > 0 ? (
           <>
-        <Box sx={{ flexGrow: 1, padding: 2, bgcolor: primaryColor, borderRadius: '5px', margin: 1}}>
+            <Box
+              sx={{
+                flexGrow: 1,
+                padding: 2,
+                bgcolor: primaryColor,
+                borderRadius: '5px',
+                margin: 1,
+              }}
+            >
               <Grid container spacing={2}>
                 {data &&
-                  data.map((item, index) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                      <React.Fragment key={index}>
-                        <DramaCard
-                          setDramaDetail={setDramaDetail}
-                          setSelectedTmdbId={setSelectedTmdbId}
-                          tmdbId={item.id}
-                          posterPath={item.poster_path}
-                          title={item.name}
-                          date={item.first_air_date}
-                          selected={selectedTmdbId === item.id}
-                        />
-                      </React.Fragment>
-                    </Grid>
-                  ))}
+                  data.map(
+                    (
+                      item: {
+                        id: number | null
+                        poster_path: string
+                        name: string
+                        first_air_date: string
+                      },
+                      index: number,
+                    ) => (
+                      <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                        <React.Fragment key={index}>
+                          <DramaCard
+                            setDramaDetail={setDramaDetail}
+                            setSelectedTmdbId={setSelectedTmdbId}
+                            tmdbId={item.id}
+                            posterPath={item.poster_path}
+                            title={item.name}
+                            date={item.first_air_date}
+                            selected={selectedTmdbId === item.id}
+                          />
+                        </React.Fragment>
+                      </Grid>
+                    ),
+                  )}
               </Grid>
             </Box>
             <div style={{ padding: 10 }}></div>
