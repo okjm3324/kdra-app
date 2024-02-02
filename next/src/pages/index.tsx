@@ -88,7 +88,7 @@ const Index: NextPage = () => {
           </Select>
         </Box>
         <MarkedMap spots={spots} selectedDramaId={selectedDramaId} />
-       {/* <Grid container spacing={4}>
+        {/* <Grid container spacing={4}>
           {spots.map((spot: SpotProps, i: number) => (
             <Grid key={i} item xs={12} md={6}>
               <Link href={'/spots/' + spot.id}>

@@ -103,7 +103,8 @@ const CreateSpot: React.FC = () => {
   const [imageUrl, setImageUrl] = useState('')
   const [imageKey, setImageKey] = useState('')
   //ドロップボックスの関数
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
       acceptedFiles.forEach(async (file) => {
         try {
           // 認証情報を取得
@@ -169,15 +170,25 @@ const CreateSpot: React.FC = () => {
         const response = await axios.get(
           process.env.NEXT_PUBLIC_API_BASE_URL + '/dramas/',
         )
-        const newDramas = response.data.map((drama) => ({
-          title: drama.title,
-          id: drama.id,
-          tmdb_id: drama.tmdb_id,
-          original_title: drama.original_title,
-          poster_path: drama.poster_path,
-          episode_number: drama.episode_number,
-          season_number: drama.season_number,
-        }))
+        const newDramas = response.data.map(
+          (drama: {
+            title: string
+            id: number
+            tmdb_id: number
+            original_title: string
+            poster_path: string
+            episode_number: number
+            season_number: number
+          }) => ({
+            title: drama.title,
+            id: drama.id,
+            tmdb_id: drama.tmdb_id,
+            original_title: drama.original_title,
+            poster_path: drama.poster_path,
+            episode_number: drama.episode_number,
+            season_number: drama.season_number,
+          }),
+        )
         setDramas(newDramas)
         console.log(newDramas)
         const headers = {
@@ -192,7 +203,9 @@ const CreateSpot: React.FC = () => {
             headers: headers,
           },
         )
-        const unsavedSpot = spotResponse.data.find((spot) => spot.status === 'unsaved')
+        const unsavedSpot = spotResponse.data.find(
+          (spot: { status: string }) => spot.status === 'unsaved',
+        )
         if (!unsavedSpot) {
           const spotCreationResponse = await axios.post(
             process.env.NEXT_PUBLIC_API_BASE_URL + '/current/spots',
@@ -225,7 +238,7 @@ const CreateSpot: React.FC = () => {
   }
 
   //新規ドラマを追加した場合セレクトボックスに反映する関数
-  const updateDramaList = (newDrama) => {
+  const updateDramaList = (newDrama: any) => {
     setDramas([...dramas, newDrama])
   }
 
@@ -245,12 +258,12 @@ const CreateSpot: React.FC = () => {
     }
   }
   //テストオートコンプリート
-  const handleChangeAutoComplete = (value) => {
+  const handleChangeAutoComplete = (value: React.SetStateAction<null>) => {
     setSelectedDrama(value)
   }
 
   //formのsubmitを押したときに発火するspotを更新する
-  const handleUpdateSpot = async (data) => {
+  const handleUpdateSpot = async (data: { [x: string]: any; single: any }) => {
     const { single, ...formData} = data
     const accessToken = localStorage.getItem('access-token')
     const client = localStorage.getItem('client')
@@ -278,14 +291,14 @@ const CreateSpot: React.FC = () => {
       console.error(error)
     }
   }
-  const onClickSetLatLng = (lat, lng) => {
+  const onClickSetLatLng = (lat: number, lng: number) => {
     setValue('latitude', lat)
     setValue('longitude', lng)
   }
   ////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <>
-      <Container maxWidth="sm" sx={{justifyContent: 'center'}}>
+      <Container maxWidth="sm" sx={{ justifyContent: 'center' }}>
         <div style={{ padding: 30 }}></div>
         <Box>
           <Grid
@@ -399,7 +412,7 @@ const CreateSpot: React.FC = () => {
                       const { getRootProps, getInputProps } = useDropzone({
                         onDrop,
                         onBlur,
-                        onChange: event => {
+                        onChange: (event: { target: { files: File[] } }) => {
                           onChange(event)
                           onDrop(event.target.files)
                         },
@@ -421,22 +434,30 @@ const CreateSpot: React.FC = () => {
                           }}
                         >
                           <input {...getInputProps()} />
-                          {imageKey ? 
-                          <Card
-                          sx={{ width: 200, height: 200, overflow: 'hidden' }}
-                        >
-                          <CardMedia
-                            component="img"
-                            image={imageUrl}
-                            alt="画像"
-                            sx={{
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'cover',
-                            }}
-                          />
-                        </Card> 
-                          : <Typography>スポットの画像をここにドロップ、またはクリックして選択してください。</Typography>}
+                          {imageKey ? (
+                            <Card
+                              sx={{
+                                width: 200,
+                                height: 200,
+                                overflow: 'hidden',
+                              }}
+                            >
+                              <CardMedia
+                                component="img"
+                                image={imageUrl}
+                                alt="画像"
+                                sx={{
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'cover',
+                                }}
+                              />
+                            </Card>
+                          ) : (
+                            <Typography>
+                              スポットの画像をここにドロップ、またはクリックして選択してください。
+                            </Typography>
+                          )}
                         </Paper>
                       )
                     }}

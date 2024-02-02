@@ -17,9 +17,7 @@ const PreparingScreen = () => {
       <Typography variant="h6" sx={{ mt: 2 }}>
         準備中です...
       </Typography>
-      <Typography variant="body1">
-        しばらくお待ちください。
-      </Typography>
+      <Typography variant="body1">しばらくお待ちください。</Typography>
     </Box>
   )
 }
