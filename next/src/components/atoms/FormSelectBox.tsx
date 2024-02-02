@@ -1,9 +1,9 @@
-import { Select, MenuItem } from '@mui/material'
+import { Select, MenuItem, SelectChangeEvent } from '@mui/material'
 
 interface FormSelectBoxProps {
   episodeNumber: number
   value: any
-  onChange: (event: React.ChangeEvent<{ value: unknown }>) => void
+  onChange: (event: SelectChangeEvent) => void
 }
 
 const FormSelectBox: React.FC<FormSelectBoxProps> = ({
