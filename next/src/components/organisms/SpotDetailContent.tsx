@@ -4,8 +4,15 @@ import TrainIcon from '@mui/icons-material/Train'
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk'
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike'
 import { useState, useEffect } from 'react'
+import { Spot } from '../../types/spot'
 
-const SpotDetailContent = ({ spot, location }) => {
+const SpotDetailContent = ({
+  spot,
+  location,
+}: {
+  spot: Spot
+  location: any
+}) => {
   const [selectedIcon, setSelectedIcon] = useState('public')
   const imageUrl = process.env.NEXT_PUBLIC_IMAGE_BASE_URL + spot.key
   //const naverUrl = `nmap://route/${selectedIcon}?slat=37.5657&slng=126.978&sname=%EC%84%9C%EC%9A%B8%EB%8C%80%ED%95%99%EA%B5%90&dlat=${spot.latitude}&dlng=${spot.longitude}&dname=${spot.name}&appname=com.example.myapp`
