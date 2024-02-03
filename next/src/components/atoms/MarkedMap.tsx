@@ -6,7 +6,7 @@ import { Input, Popover } from '@mui/material'
 import Modal from '../../components/molecules/Modal'
 import SpotDetailContent from '../organisms/SpotDetailContent'
 import useLocationWithFallback  from '../../hooks/useLocationWithFallback'
-import Spot from '../../types/spot'
+import { Spot } from '../../types/spot'
 
 const googleMapOptions = {
   styles: InterfaceMap,
