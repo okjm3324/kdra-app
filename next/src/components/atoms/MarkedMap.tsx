@@ -72,14 +72,7 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
   }
 
   //clickedMarkerセッター
-  const setterClickedMarker = (spot: {
-    id: number
-    latitude: number
-    longitude: number
-    name: string
-    dramaId: number
-    status: string
-  }) => {
+  const setterClickedMarker = (spot: Spot) => {
     setClickedMarker(spot)
     console.log(spot)
     handleOpenModal()
