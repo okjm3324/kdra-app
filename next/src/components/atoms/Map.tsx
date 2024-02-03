@@ -1,7 +1,7 @@
 import { GoogleMap, useLoadScript, MarkerF,useJsApiLoader, } from '@react-google-maps/api'
 import { useCallback, useRef, useState } from 'react'
 import { InterfaceMap } from '../../styles/googleMapStyles'
-import usePlacesAutoComplete  from 'use-places-autocomplete'
+import usePlacesAutoComplete from 'use-places-autocomplete'
 import { Input, Popover } from '@mui/material'
 import SearchLocation from './SearchLocation'
 import { reverseGeocode } from '@/utils/geocode'
