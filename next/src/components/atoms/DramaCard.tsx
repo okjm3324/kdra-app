@@ -17,11 +17,14 @@ type DramaDetail = {
 }
 type DramaProps = {
   tmdbId: number
-  setDramaDetail: React.Dispatch<React.SetStateAction<DramaDetail>>
   title: string
   posterPath: string
   date: string
   selected: boolean
+}
+
+type DramaCardProps = DramaProps & {
+  setDramaDetail: React.Dispatch<React.SetStateAction<DramaDetail>>
   setSelectedTmdbId: React.Dispatch<React.SetStateAction<number>>
 }
 const DramaCard = ({
@@ -32,7 +35,7 @@ const DramaCard = ({
   date,
   selected,
   setSelectedTmdbId,
-}: DramaProps) => {
+}: DramaCardProps) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
   const poster_url = 'https://image.tmdb.org/t/p/w92'
   const image_path = poster_url + posterPath

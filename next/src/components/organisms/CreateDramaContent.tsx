@@ -21,7 +21,15 @@ interface CreateDramaContentProps {
   setModalOpen: Dispatch<SetStateAction<boolean>>
   updateDramaList: (drama: any) => void
 }
-
+interface DramaCardProps {
+  setDramaDetail: (detail: any) => void 
+  setSelectedTmdbId: (id: number | null) => void
+  tmdbId: number | null
+  posterPath: string
+  title: string
+  date: string
+  selected: boolean
+}
 const CreateDramaContent = ({
   setModalOpen,
   updateDramaList,
@@ -168,13 +176,22 @@ const CreateDramaContent = ({
             >
               <Grid container spacing={2}>
                 {data &&
-                  data.map((item: { id: number | null; poster_path: string; name: string; first_air_date: string; }, index: React.Key | null | undefined) => (
+                  data.map(
+                    (
+                      item: {
+                        id: number | null
+                        poster_path: string
+                        name: string
+                        first_air_date: string
+                      },
+                      index: React.Key | null | undefined,
+                    ) => (
                       <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                         <React.Fragment key={index}>
                           <DramaCard
                             setDramaDetail={setDramaDetail}
                             setSelectedTmdbId={setSelectedTmdbId}
-                            tmdbId={item.id}
+                            tmdbId={item.id ?? 0}
                             posterPath={item.poster_path}
                             title={item.name}
                             date={item.first_air_date}
