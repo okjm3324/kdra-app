@@ -1,12 +1,10 @@
 import { GoogleMap, useLoadScript, MarkerF, useJsApiLoader, Circle } from '@react-google-maps/api'
 import { useCallback, useRef, useState, useEffect } from 'react'
 import { InterfaceMap } from '../../styles/googleMapStyles'
-import PlaceInfo from './Placeinfo'
-import usePlacesAutoComplete, {getGeoCode, getLatLng} from 'use-places-autocomplete'
+import usePlacesAutoComplete from 'use-places-autocomplete'
 import { Input, Popover } from '@mui/material'
 import Modal from '../../components/molecules/Modal'
 import SpotDetailContent from '../organisms/SpotDetailContent'
-import { SportsTennis } from '@mui/icons-material'
 import useLocationWithFallback  from '../../hooks/useLocationWithFallback'
 
 const googleMapOptions = {
@@ -124,7 +122,6 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
                 />
               )
             })}
-        <PlaceInfo />
       </GoogleMap>
       {isModalOpen && (
         <Modal title={'詳細'} open={isModalOpen} onClose={handleCloseModal}>
