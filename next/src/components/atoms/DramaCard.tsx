@@ -24,7 +24,7 @@ type DramaProps = {
 }
 
 type DramaCardProps = DramaProps & {
-  setDramaDetail: React.Dispatch<React.SetStateAction<DramaDetail>>
+  setDramaDetail: React.Dispatch<React.SetStateAction<DramaDetail | null>>
   setSelectedTmdbId: React.Dispatch<React.SetStateAction<number>>
 }
 const DramaCard = ({

@@ -30,6 +30,15 @@ interface DramaCardProps {
   date: string
   selected: boolean
 }
+type DramaDetail = {
+  title: string
+  originalTitle: string
+  tmdbId: number
+  posterPath: string
+  firstAirDate: string
+  episodeNumber: number
+  seasonNumber: number
+}
 const CreateDramaContent = ({
   setModalOpen,
   updateDramaList,
@@ -43,8 +52,8 @@ const CreateDramaContent = ({
   const headers = { 'Content-Type': 'application/json' }
   //テスト終わり
   //Draamの詳細を取得するためのステイト
-  const [dramaDetail, setDramaDetail] = useState(null)
-  const [selectedTmdbId, setSelectedTmdbId] = useState(null)
+  const [dramaDetail, setDramaDetail] = useState<DramaDetail | null>(null)
+  const [selectedTmdbId, setSelectedTmdbId] = useState<number>(0)
   const [keyword, setKeyword] = useState('')
   const url =
     process.env.NEXT_PUBLIC_API_BASE_URL +
