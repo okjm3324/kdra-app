@@ -1,7 +1,6 @@
 import { GoogleMap, useLoadScript, MarkerF,useJsApiLoader, } from '@react-google-maps/api'
 import { useCallback, useRef, useState } from 'react'
 import { InterfaceMap } from '../../styles/googleMapStyles'
-import PlaceInfo from './Placeinfo'
 import usePlacesAutoComplete, {getGeoCode, getLatLng} from 'use-places-autocomplete'
 import { Input, Popover } from '@mui/material'
 import SearchLocation from './SearchLocation'
