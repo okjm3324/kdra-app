@@ -13,18 +13,7 @@ import { fetcher } from '@/utils'
 import MarkedMap from '@/components/atoms/MarkedMap'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-type SpotProps = {
-  id: number
-  name: string
-  latitude: number
-  longitude: number
-  address: string
-  key: string
-  createdAt: string
-  user: {
-    name: string
-  }
-}
+
 const Index: NextPage = () => {
   const router = useRouter()
   const page = 'page' in router.query ? Number(router.query.page) : 1
@@ -53,6 +42,7 @@ const Index: NextPage = () => {
       }
     })()
   }, [])
+  //スポットを取得
   const { data, error } = useSWR(url, fetcher)
   if (error) return <Error />
   if (!data) return <Loading />
@@ -83,7 +73,11 @@ const Index: NextPage = () => {
           >
             <MenuItem value={null}>ドラマを選択</MenuItem>
             {dramas.map((drama) => {
-              return <MenuItem key={drama.id} value={drama.id}>{drama.title}</MenuItem>
+              return (
+                <MenuItem key={drama.id} value={drama.id}>
+                  {drama.title}
+                </MenuItem>
+              )
             })}
           </Select>
         </Box>

@@ -10,7 +10,7 @@ const SpotDetailContent = ({
   spot,
   location,
 }: {
-  spot: Spot
+  spot: Spot | null
   location: any
 }) => {
   const [selectedIcon, setSelectedIcon] = useState('public')

@@ -32,14 +32,7 @@ type Marker = {
 }
 
 type MapProps = {
-  spots?: {
-    id: number
-    latitude: number
-    longitude: number
-    name: string
-    dramaId: number
-    status: string
-  }[]
+  spots?: Spot[]
   selectedDramaId?: number
 }
 
@@ -107,6 +100,7 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
               return shouldDisplay
             })
             .map((spot) => {
+              console.log(spot)
               if (spot.status === 'unsaved') return null
               return (
                 <MarkerF
