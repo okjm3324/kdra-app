@@ -33,7 +33,7 @@ type Marker = {
 
 type MapProps = {
   spots?: Spot[]
-  selectedDramaId?: number
+  selectedDramaId?: number | null
 }
 
 const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {

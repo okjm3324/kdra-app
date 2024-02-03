@@ -13,20 +13,21 @@ import { fetcher } from '@/utils'
 import MarkedMap from '@/components/atoms/MarkedMap'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import {Drama} from '../types/drama'
 
 const Index: NextPage = () => {
   const router = useRouter()
   const page = 'page' in router.query ? Number(router.query.page) : 1
   const url = process.env.NEXT_PUBLIC_API_BASE_URL + '/spots/?page=' + page
   const [selectedDramaId, setSelectedDramaId] = useState<number | null>(null)
-  const [dramas, setDramas] = useState([])
+  const [dramas, setDramas] = useState<Drama[]>([])
   useEffect(() => {
     ;(async () => {
       try {
         const response = await axios.get(
           process.env.NEXT_PUBLIC_API_BASE_URL + '/dramas/',
         )
-        const newDramas = response.data.map((drama) => ({
+        const newDramas = response.data.map((drama: Drama) => ({
           title: drama.title,
           id: drama.id,
           tmdb_id: drama.tmdb_id,
@@ -54,7 +55,7 @@ const Index: NextPage = () => {
     router.push('/?page=' + value)
   }
 
-  const handleDramaChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleDramaChange = (event: React.ChangeEvent<number | null>) => {
     setSelectedDramaId(event.target.value as number)
   }
   return (
