@@ -19,7 +19,11 @@ const SpotDetailContent = ({
     : ''
   const [naverUrl, setNaverUrl] = useState('')
   useEffect(() => {
-    setNaverUrl(`nmap://route/${selectedIcon}?slat=${location.lat}&slng=${location.lng}&sname=%EC%84%9C%EC%9A%B8%EB%8C%80%ED%95%99%EA%B5%90&dlat=${spot.latitude}&dlng=${spot.longitude}&dname=${spot.name}&appname=kandramap`)
+    if (spot) {
+      setNaverUrl(
+        `nmap://route/${selectedIcon}?slat=${location.lat}&slng=${location.lng}&sname=%EC%84%9C%EC%9A%B8%EB%8C%80%ED%95%99%EA%B5%90&dlat=${spot.latitude}&dlng=${spot.longitude}&dname=${spot.name}&appname=kandramap`,
+      )
+    }
   }, [selectedIcon, spot])
   return (
     <Container>
