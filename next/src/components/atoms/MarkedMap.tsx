@@ -68,7 +68,7 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
 
   const handleCloseModal = (): void => {
     setIsModalOpen(false)
-    setClickedMarker({})
+    setClickedMarker(null)
   }
 
   //clickedMarkerセッター
