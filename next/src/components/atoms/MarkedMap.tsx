@@ -6,6 +6,7 @@ import { Input, Popover } from '@mui/material'
 import Modal from '../../components/molecules/Modal'
 import SpotDetailContent from '../organisms/SpotDetailContent'
 import useLocationWithFallback  from '../../hooks/useLocationWithFallback'
+import Spot from '../../types/spot'
 
 const googleMapOptions = {
   styles: InterfaceMap,
@@ -44,7 +45,7 @@ type MapProps = {
 
 const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [clickedMarker, setClickedMarker] = useState({})
+  const [clickedMarker, setClickedMarker] = useState<Spot | null>(null)
   const location = useLocationWithFallback()
   const [marker, setMarker] = useState<Marker | null>(null)
   const { isLoaded, loadError } = useLoadScript({
