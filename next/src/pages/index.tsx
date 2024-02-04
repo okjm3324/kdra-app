@@ -14,6 +14,7 @@ import MarkedMap from '@/components/atoms/MarkedMap'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import {Drama} from '../types/drama'
+import { SelectChangeEvent } from '@mui/material/Select'
 
 const Index: NextPage = () => {
   const router = useRouter()
@@ -55,7 +56,7 @@ const Index: NextPage = () => {
     router.push('/?page=' + value)
   }
 
-  const handleDramaChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleDramaChange = (event: SelectChangeEvent<number | null>) => {
     setSelectedDramaId(event.target.value as number)
   }
   return (
