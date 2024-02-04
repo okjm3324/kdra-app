@@ -12,15 +12,15 @@ import Error from '../components/templates/Error'
 import { idText } from 'typescript';
 import {useTheme } from '@mui/material/styles'
 import Loading from '../components/atoms/Loading'
-
+import { DramaDetail } from '../types/dramaDetail'
 const SearchDrama = () => {
   //テスト
   const createUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/dramas'
   const headers = { 'Content-Type': 'application/json' }
   //テスト終わり
   //Draamの詳細を取得するためのステイト
-  const [dramaDetail, setDramaDetail] = useState(null)
-  const [selectedTmdbId, setSelectedTmdbId] = useState(null)
+  const [dramaDetail, setDramaDetail] = useState<DramaDetail | null>(null)
+  const [selectedTmdbId, setSelectedTmdbId] = useState<number | null>(null)
   const [keyword, setKeyword] = useState('')
   const url =
     process.env.NEXT_PUBLIC_API_BASE_URL +
@@ -50,7 +50,7 @@ const SearchDrama = () => {
     mutate(newUrl)
   }
   //Dramaレコードの作成ハンドラ
-  const onClickCreateDrama = (dramaDetail: null) => {
+  const onClickCreateDrama = (dramaDetail: DramaDetail | null) => {
     axios({
       method: 'POST',
       url: createUrl,
@@ -143,7 +143,7 @@ const SearchDrama = () => {
                           <DramaCard
                             setDramaDetail={setDramaDetail}
                             setSelectedTmdbId={setSelectedTmdbId}
-                            tmdbId={item.id}
+                            tmdbId={item.id || 0}
                             posterPath={item.poster_path}
                             title={item.name}
                             date={item.first_air_date}
