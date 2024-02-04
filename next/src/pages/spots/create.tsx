@@ -56,7 +56,6 @@ const CreateSpot: React.FC = () => {
   const poster_url: string = 'https://image.tmdb.org/t/p/w500'
   const { data, error, isValidating } = useSWR(url, fetcher)
   const isLoading: boolean = isValidating
-
   const [dramas, setDramas] = useState<Drama[]>([])
   //フォームの宣言
   const {
@@ -154,8 +153,9 @@ const CreateSpot: React.FC = () => {
     },
     [setImageUrl, setImageKey, setValue],
   )
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
-
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+  })
   useEffect(() => {
     //DBのドラマを取得=>オートコンプリートへ格納
     ;(async () => {
@@ -249,10 +249,6 @@ const CreateSpot: React.FC = () => {
     if (newValue !== null) {
       setSelectedDrama(newValue)
     }
-  }
-  //テストオートコンプリート
-  const handleChangeAutoComplete = (value: React.SetStateAction<null>) => {
-    setSelectedDrama(value)
   }
 
   //formのsubmitを押したときに発火するspotを更新する
@@ -405,14 +401,6 @@ const CreateSpot: React.FC = () => {
                     name="files"
                     defaultValue={[]}
                     render={({ field: { onChange, onBlur, value } }) => {
-                      const { getRootProps, getInputProps } = useDropzone({
-                        onDrop,
-                        onBlur,
-                        onChange: (event: { target: { files: File[] } }) => {
-                          onChange(event)
-                          onDrop(event.target.files)
-                        },
-                      })
                       return (
                         <Paper
                           variant="outlined"
