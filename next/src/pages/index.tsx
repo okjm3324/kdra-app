@@ -55,7 +55,7 @@ const Index: NextPage = () => {
     router.push('/?page=' + value)
   }
 
-  const handleDramaChange = (event: React.ChangeEvent<number | null>) => {
+  const handleDramaChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedDramaId(event.target.value as number)
   }
   return (
