@@ -74,7 +74,7 @@ const Index: NextPage = () => {
               marginBottom: '20px',
             }}
           >
-            <MenuItem value={null}>ドラマを選択</MenuItem>
+            <MenuItem value={''}>ドラマを選択</MenuItem>
             {dramas.map((drama) => {
               return (
                 <MenuItem key={drama.id} value={drama.id}>
