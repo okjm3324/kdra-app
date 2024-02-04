@@ -65,7 +65,7 @@ const Index: NextPage = () => {
       <Container maxWidth="md" sx={{ pt: 6 }}>
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <Select
-            value={selectedDramaId}
+            value={selectedDramaId !== null ? selectedDramaId.toString() : ''}
             onChange={handleDramaChange}
             displayEmpty
             sx={{
