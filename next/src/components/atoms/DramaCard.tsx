@@ -20,12 +20,12 @@ type DramaProps = {
   title: string
   posterPath: string
   date: string
-  selected: boolean
+  selected?: boolean
 }
 
 type DramaCardProps = DramaProps & {
-  setDramaDetail: React.Dispatch<React.SetStateAction<DramaDetail | null>>
-  setSelectedTmdbId: React.Dispatch<React.SetStateAction<number>>
+  setDramaDetail?: React.Dispatch<React.SetStateAction<DramaDetail | null>>
+  setSelectedTmdbId?: React.Dispatch<React.SetStateAction<number>>
 }
 const DramaCard = ({
   tmdbId,
@@ -41,10 +41,14 @@ const DramaCard = ({
   const image_path = poster_url + posterPath
   //
   const onClickFetchDetail = async () => {
-    setSelectedTmdbId(tmdbId)
+    if (setSelectedTmdbId) {
+      setSelectedTmdbId(tmdbId)
+    }
     try {
       const res = await axios.get(`${baseUrl}/dramas/detail_drama?id=${tmdbId}`)
-      setDramaDetail(res.data)
+      if (setDramaDetail) {
+        setDramaDetail(res.data)
+      }
       console.log(res.data)
     } catch (error) {
       console.error(error)

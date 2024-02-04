@@ -33,6 +33,7 @@ import Map from '@/components/atoms/Map'
 import CreateDramaContent from '@/components/organisms/CreateDramaContent'
 import { Spot } from '@/types/spot'
 import { fetcher } from '@/utils'
+import { Drama } from '../../types/drama'
 
 enum Status {
   Unsaved = 10,
@@ -56,17 +57,7 @@ const CreateSpot: React.FC = () => {
   const { data, error, isValidating } = useSWR(url, fetcher)
   const isLoading: boolean = isValidating
 
-  const [dramas, setDramas] = useState<
-    Array<{
-      id: number
-      tmdb_id: number
-      title: string
-      original_title: string
-      episode_number: number
-      season_number: number
-      poster_path: string
-    }>
-  >([])
+  const [dramas, setDramas] = useState<Drama[]>([])
   //フォームの宣言
   const {
     control,
@@ -243,7 +234,7 @@ const CreateSpot: React.FC = () => {
   }
 
   //オートコンプリートの関数
-  const handleAutocompleteChange = (event, newValue) => {
+  const handleAutocompleteChange = (event: any, newValue: any) => {
     // newValue は選択されたドラマオブジェクトです
     if (newValue !== null) {
       setSelectedDrama(newValue)
@@ -278,7 +269,7 @@ const CreateSpot: React.FC = () => {
         method: 'PUT',
         url:
           process.env.NEXT_PUBLIC_API_BASE_URL +
-          `/current/spots/${unsavedSpot.id}`,
+          `/current/spots/${unsavedSpot?.id}`,
         data: formData,
         headers: {
           'Content-Type': 'application/json',
@@ -320,9 +311,10 @@ const CreateSpot: React.FC = () => {
                     render={({ field }) => (
                       <Autocomplete
                         {...field}
+                        value={(field.value as Drama | null) || null}
                         fullWidth
                         options={dramas}
-                        getOptionLabel={(option) => option.title || ''}
+                        getOptionLabel={(option: Drama) => option.title || ''}
                         renderInput={(params) => (
                           <TextField {...params} label="drama title" />
                         )}
