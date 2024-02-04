@@ -56,8 +56,9 @@ const Index: NextPage = () => {
     router.push('/?page=' + value)
   }
 
-  const handleDramaChange = (event: SelectChangeEvent<number | null>) => {
-    setSelectedDramaId(event.target.value as number)
+  const handleDramaChange = (event: SelectChangeEvent) => {
+    const value = event.target.value
+    setSelectedDramaId(value === '' ? null : Number(value))
   }
   return (
     <Box css={styles.pageMinHeight} sx={{ backgroundColor: '#e6f2ff' }}>
