@@ -47,7 +47,7 @@ const CreateSpot: React.FC = () => {
   // 公開か下書きかのステイト
   const [status, setStatus] = useState(Status.Unsaved)
   const [open, setOpen] = useState<boolean>(false)
-  const [selectedDrama, setSelectedDrama] = useState(null)
+  const [selectedDrama, setSelectedDrama] = useState<Drama | null>(null)
   const [selectedEpisode, setSelectedEpisode] = useState(1)
   const [keyword, setKeyword] = useState<string>('')
   const url: string =
@@ -77,6 +77,8 @@ const CreateSpot: React.FC = () => {
       latitude: 0,
       address: '',
       status: Status.Unsaved,
+      name: '',
+      files: [],
     },
   })
   //アドレスセッター
@@ -334,7 +336,7 @@ const CreateSpot: React.FC = () => {
                         tmdbId={selectedDrama.tmdb_id}
                         posterPath={selectedDrama.poster_path}
                         title={selectedDrama.title}
-                        date={selectedDrama.first_air_date}
+                        date={selectedDrama.first_air_date || ''}
                       />
                       <Controller
                         control={control}
@@ -347,10 +349,12 @@ const CreateSpot: React.FC = () => {
                               label="エピソード" // フォーカスを外した時のラベルの部分これを指定しないとラベルとコントロール線が被る
                               {...field}
                             >
-                              <MenuItem value="" sx={{color:'gray'}}>
+                              <MenuItem value="" sx={{ color: 'gray' }}>
                                 未選択
                               </MenuItem>
-                              {Array.from({ length: selectedDrama.episode_number }, (_, index) => (
+                              {Array.from(
+                                { length: selectedDrama.episode_number },
+                                (_, index) => (
                                   <MenuItem key={index + 1} value={index + 1}>
                                     {index + 1}話
                                   </MenuItem>

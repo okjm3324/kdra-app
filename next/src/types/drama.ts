@@ -6,4 +6,5 @@ export type Drama = {
   poster_path: string
   episode_number: number
   season_number: number
+  first_air_date?: string
 }
