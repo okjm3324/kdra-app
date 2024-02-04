@@ -20,7 +20,7 @@ const SearchDrama = () => {
   //テスト終わり
   //Draamの詳細を取得するためのステイト
   const [dramaDetail, setDramaDetail] = useState<DramaDetail | null>(null)
-  const [selectedTmdbId, setSelectedTmdbId] = useState<number | null>(null)
+  const [selectedTmdbId, setSelectedTmdbId] = useState<number>(0)
   const [keyword, setKeyword] = useState('')
   const url =
     process.env.NEXT_PUBLIC_API_BASE_URL +
