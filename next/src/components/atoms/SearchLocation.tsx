@@ -1,11 +1,11 @@
 // SearchLocation.tsx
 import { type } from 'os'
+import { Autocomplete, TextField } from '@mui/material'
 import React from 'react'
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from 'use-places-autocomplete'
-import { Autocomplete, TextField } from '@mui/material'
 import { reverseGeocode } from '@/utils/geocode'
 
 type SearchLocationProps = {

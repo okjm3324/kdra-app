@@ -1,28 +1,26 @@
-import { Grid, Button, Box, TextField, Typography } from '@mui/material'
-import useSWR, { mutate } from 'swr'
-import { useForm, Controller } from 'react-hook-form';
-import { useState } from 'react'
-import { fetcher } from '@/utils'
-import type { NextPage } from 'next'
-import DramaCard from '../atoms/DramaCard'
+import { FilterDramaSharp } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
+import { Grid, Button, Box, TextField, Typography } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import axios, { AxiosResponse, AxiosError } from 'axios'
-import React from 'react'
+import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import React, { useState, Dispatch, SetStateAction } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import useSWR, { mutate } from 'swr'
+import { idText } from 'typescript'
+import DramaCard from '../atoms/DramaCard'
+import Loading from '../atoms/Loading'
 import Error from '../templates/Error'
-import { idText } from 'typescript';
-import {useTheme } from '@mui/material/styles'
-import Loading from '../atoms/Loading';
-import { useRouter } from 'next/router';
-import { useSnackbarState } from '@/hooks/useGlobalState';
-import { FilterDramaSharp } from '@mui/icons-material';
-import { Dispatch, SetStateAction } from 'react';
+import { useSnackbarState } from '@/hooks/useGlobalState'
+import { fetcher } from '@/utils'
 
 interface CreateDramaContentProps {
   setModalOpen: Dispatch<SetStateAction<boolean>>
   updateDramaList: (drama: any) => void
 }
 interface DramaCardProps {
-  setDramaDetail: (detail: any) => void 
+  setDramaDetail: (detail: any) => void
   setSelectedTmdbId: (id: number | null) => void
   tmdbId: number | null
   posterPath: string

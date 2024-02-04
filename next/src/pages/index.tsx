@@ -1,20 +1,28 @@
-import { Box, Grid, Container, Pagination, Select, MenuItem, Typography } from '@mui/material'
+import {
+  Box,
+  Grid,
+  Container,
+  Pagination,
+  Select,
+  MenuItem,
+  Typography,
+} from '@mui/material'
+import { SelectChangeEvent } from '@mui/material/Select'
+import axios from 'axios'
 import camelcaseKeys from 'camelcase-keys'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useState, useEffect } from 'react'
 import useSWR from 'swr'
+import { Drama } from '../types/drama'
 import Loading from '@/components/atoms/Loading'
-import SpotCard from '@/components/organisms/SpotCard'
 import Map from '@/components/atoms/Map'
+import MarkedMap from '@/components/atoms/MarkedMap'
+import SpotCard from '@/components/organisms/SpotCard'
 import Error from '@/components/templates/Error'
 import { styles } from '@/styles'
 import { fetcher } from '@/utils'
-import MarkedMap from '@/components/atoms/MarkedMap'
-import { useState, useEffect } from 'react'
-import axios from 'axios'
-import {Drama} from '../types/drama'
-import { SelectChangeEvent } from '@mui/material/Select'
 
 const Index: NextPage = () => {
   const router = useRouter()

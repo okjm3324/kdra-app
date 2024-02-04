@@ -1,18 +1,17 @@
-import { Grid, Button, Box, TextField, Typography } from '@mui/material';
-import useSWR, { mutate } from 'swr'
-import { useForm, Controller } from 'react-hook-form';
-import { useState } from 'react'
-import { fetcher } from '@/utils'
-import type { NextPage } from 'next'
-import DramaCard from '../components/atoms/DramaCard'
 import { LoadingButton } from '@mui/lab'
+import { Grid, Button, Box, TextField, Typography } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import axios, { AxiosResponse, AxiosError } from 'axios'
-import React from 'react'
-import Error from '../components/templates/Error'
-import { idText } from 'typescript';
-import {useTheme } from '@mui/material/styles'
+import type { NextPage } from 'next'
+import React, { useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import useSWR, { mutate } from 'swr'
+import { idText } from 'typescript'
+import DramaCard from '../components/atoms/DramaCard'
 import Loading from '../components/atoms/Loading'
+import Error from '../components/templates/Error'
 import { DramaDetail } from '../types/dramaDetail'
+import { fetcher } from '@/utils'
 const SearchDrama = () => {
   //テスト
   const createUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/dramas'

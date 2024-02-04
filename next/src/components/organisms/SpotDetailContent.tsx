@@ -1,8 +1,16 @@
-import { Button, Container, Typography,Paper, CardMedia, Box, Link } from "@mui/material"
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar'
-import TrainIcon from '@mui/icons-material/Train'
-import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk'
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike'
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar'
+import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk'
+import TrainIcon from '@mui/icons-material/Train'
+import {
+  Button,
+  Container,
+  Typography,
+  Paper,
+  CardMedia,
+  Box,
+  Link,
+} from '@mui/material'
 import { useState, useEffect } from 'react'
 import { Spot } from '../../types/spot'
 

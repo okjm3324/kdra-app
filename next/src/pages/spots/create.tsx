@@ -1,4 +1,4 @@
-import { LoadingButton, } from '@mui/lab'
+import { LoadingButton } from '@mui/lab'
 import {
   Grid,
   Button,
@@ -26,14 +26,14 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useForm, Controller } from 'react-hook-form'
 import useSWR, { mutate } from 'swr'
-import Modal from '../../components/molecules/Modal'
 import DramaCard from '../../components/atoms/DramaCard'
+import Modal from '../../components/molecules/Modal'
+import { Drama } from '../../types/drama'
 import FormSelectBox from '@/components/atoms/FormSelectBox'
 import Map from '@/components/atoms/Map'
 import CreateDramaContent from '@/components/organisms/CreateDramaContent'
 import { Spot } from '@/types/spot'
 import { fetcher } from '@/utils'
-import { Drama } from '../../types/drama'
 
 enum Status {
   Unsaved = 10,
@@ -253,7 +253,7 @@ const CreateSpot: React.FC = () => {
 
   //formのsubmitを押したときに発火するspotを更新する
   const handleUpdateSpot = async (data: { [x: string]: any; single: any }) => {
-    const { single, ...formData} = data
+    const { single, ...formData } = data
     const accessToken = localStorage.getItem('access-token')
     const client = localStorage.getItem('client')
     const uid = localStorage.getItem('uid')
@@ -354,8 +354,8 @@ const CreateSpot: React.FC = () => {
                                   <MenuItem key={index + 1} value={index + 1}>
                                     {index + 1}話
                                   </MenuItem>
-                                ))
-                              }
+                                ),
+                              )}
                             </Select>
                             <FormHelperText>
                               {fieldState.error?.message}
