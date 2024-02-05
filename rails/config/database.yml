@@ -24,4 +24,4 @@ test:
 
 
 production:
-  url: <%= ENV['DATABASE_URL'] %git >
+  url: <%= ENV['DATABASE_URL'] %>
