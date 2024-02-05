@@ -1,11 +1,11 @@
 // SearchLocation.tsx
 import { type } from 'os'
+import { Autocomplete, TextField } from '@mui/material'
 import React from 'react'
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
 } from 'use-places-autocomplete'
-import { Autocomplete, TextField } from '@mui/material'
 import { reverseGeocode } from '@/utils/geocode'
 
 type SearchLocationProps = {
@@ -14,7 +14,11 @@ type SearchLocationProps = {
   setAddress: (address: string) => void
 }
 
-const SearchLocation: React.FC<SearchLocationProps> = ({ setCoordinates, onClickSetLatLng, setAddress }) => {
+const SearchLocation: React.FC<SearchLocationProps> = ({
+  setCoordinates,
+  onClickSetLatLng,
+  setAddress,
+}) => {
   const {
     ready,
     value,

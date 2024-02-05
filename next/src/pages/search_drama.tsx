@@ -1,26 +1,25 @@
-import { Grid, Button, Box, TextField, Typography } from '@mui/material';
-import useSWR, { mutate } from 'swr'
-import { useForm, Controller } from 'react-hook-form';
-import { useState } from 'react'
-import { fetcher } from '@/utils'
-import type { NextPage } from 'next'
-import DramaCard from '../components/atoms/DramaCard'
 import { LoadingButton } from '@mui/lab'
+import { Grid, Button, Box, TextField, Typography } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import axios, { AxiosResponse, AxiosError } from 'axios'
-import React from 'react'
-import Error from '../components/templates/Error'
-import { idText } from 'typescript';
-import {useTheme } from '@mui/material/styles'
+import type { NextPage } from 'next'
+import React, { useState } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import useSWR, { mutate } from 'swr'
+import { idText } from 'typescript'
+import DramaCard from '../components/atoms/DramaCard'
 import Loading from '../components/atoms/Loading'
-
+import Error from '../components/templates/Error'
+import { DramaDetail } from '../types/dramaDetail'
+import { fetcher } from '@/utils'
 const SearchDrama = () => {
   //テスト
   const createUrl = process.env.NEXT_PUBLIC_API_BASE_URL + '/dramas'
   const headers = { 'Content-Type': 'application/json' }
   //テスト終わり
   //Draamの詳細を取得するためのステイト
-  const [dramaDetail, setDramaDetail] = useState(null)
-  const [selectedTmdbId, setSelectedTmdbId] = useState(null)
+  const [dramaDetail, setDramaDetail] = useState<DramaDetail | null>(null)
+  const [selectedTmdbId, setSelectedTmdbId] = useState<number>(0)
   const [keyword, setKeyword] = useState('')
   const url =
     process.env.NEXT_PUBLIC_API_BASE_URL +
@@ -50,11 +49,11 @@ const SearchDrama = () => {
     mutate(newUrl)
   }
   //Dramaレコードの作成ハンドラ
-  const onClickCreateDrama = (dramaDetail) => {
+  const onClickCreateDrama = (dramaDetail: DramaDetail | null) => {
     axios({
       method: 'POST',
       url: createUrl,
-      data: { drama: { ...dramaDetail } },
+      data: { drama: { ...(dramaDetail || {}) } },
       headers: headers,
     })
       .then((response) => {
@@ -103,7 +102,12 @@ const SearchDrama = () => {
           onClick={onClickDataFetch}
           loading={isLoading}
           size="large"
-          sx={{ height: '56px', fontWeight: 'bold', color: 'white', marginLeft: 0.5 }}
+          sx={{
+            height: '56px',
+            fontWeight: 'bold',
+            color: 'white',
+            marginLeft: 0.5,
+          }}
         >
           検索
         </LoadingButton>
@@ -112,24 +116,42 @@ const SearchDrama = () => {
       <Box>
         {data && data.length > 0 ? (
           <>
-        <Box sx={{ flexGrow: 1, padding: 2, bgcolor: primaryColor, borderRadius: '5px', margin: 1}}>
+            <Box
+              sx={{
+                flexGrow: 1,
+                padding: 2,
+                bgcolor: primaryColor,
+                borderRadius: '5px',
+                margin: 1,
+              }}
+            >
               <Grid container spacing={2}>
                 {data &&
-                  data.map((item, index) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-                      <React.Fragment key={index}>
-                        <DramaCard
-                          setDramaDetail={setDramaDetail}
-                          setSelectedTmdbId={setSelectedTmdbId}
-                          tmdbId={item.id}
-                          posterPath={item.poster_path}
-                          title={item.name}
-                          date={item.first_air_date}
-                          selected={selectedTmdbId === item.id}
-                        />
-                      </React.Fragment>
-                    </Grid>
-                  ))}
+                  data.map(
+                    (
+                      item: {
+                        id: number | null
+                        poster_path: string
+                        name: string
+                        first_air_date: string
+                      },
+                      index: number,
+                    ) => (
+                      <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                        <React.Fragment key={index}>
+                          <DramaCard
+                            setDramaDetail={setDramaDetail}
+                            setSelectedTmdbId={setSelectedTmdbId}
+                            tmdbId={item.id || 0}
+                            posterPath={item.poster_path}
+                            title={item.name}
+                            date={item.first_air_date}
+                            selected={selectedTmdbId === item.id}
+                          />
+                        </React.Fragment>
+                      </Grid>
+                    ),
+                  )}
               </Grid>
             </Box>
             <div style={{ padding: 10 }}></div>

@@ -1,7 +1,7 @@
-import React from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
+import Typography from '@mui/material/Typography'
+import React from 'react'
 
 const PreparingScreen = () => {
   return (
@@ -17,9 +17,7 @@ const PreparingScreen = () => {
       <Typography variant="h6" sx={{ mt: 2 }}>
         準備中です...
       </Typography>
-      <Typography variant="body1">
-        しばらくお待ちください。
-      </Typography>
+      <Typography variant="body1">しばらくお待ちください。</Typography>
     </Box>
   )
 }

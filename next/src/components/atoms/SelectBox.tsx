@@ -1,9 +1,16 @@
 import { FormControl, Select, InputLabel, MenuItem } from '@mui/material'
 
-const SelectBox = ({ episodeNumber, selectedEpisode, setSelectedEpisode }) => {
-  const handleChange = (e) => {
-    console.log('changed')
-    setSelectedEpisode(e.target.value)
+const SelectBox = ({
+  episodeNumber,
+  selectedEpisode,
+  setSelectedEpisode,
+}: {
+  episodeNumber: number
+  selectedEpisode: number
+  setSelectedEpisode: (value: number) => void
+}) => {
+  const handleChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    setSelectedEpisode(e.target.value as number)
   }
 
   return (
@@ -14,7 +21,9 @@ const SelectBox = ({ episodeNumber, selectedEpisode, setSelectedEpisode }) => {
         id="demo-simple-select"
         value={selectedEpisode}
         label="Episode"
-        onChange={handleChange}
+        onChange={(event) =>
+          handleChange(event as React.ChangeEvent<{ value: unknown }>)
+        }
       >
         {Array.from({ length: episodeNumber }, (_, index) => (
           <MenuItem key={index + 1} value={index + 1}>

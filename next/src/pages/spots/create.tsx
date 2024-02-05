@@ -1,4 +1,4 @@
-import { LoadingButton, } from '@mui/lab'
+import { LoadingButton } from '@mui/lab'
 import {
   Grid,
   Button,
@@ -26,8 +26,9 @@ import React, { useEffect, useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useForm, Controller } from 'react-hook-form'
 import useSWR, { mutate } from 'swr'
-import Modal from '../../components/molecules/Modal'
 import DramaCard from '../../components/atoms/DramaCard'
+import Modal from '../../components/molecules/Modal'
+import { Drama } from '../../types/drama'
 import FormSelectBox from '@/components/atoms/FormSelectBox'
 import Map from '@/components/atoms/Map'
 import CreateDramaContent from '@/components/organisms/CreateDramaContent'
@@ -46,7 +47,7 @@ const CreateSpot: React.FC = () => {
   // 公開か下書きかのステイト
   const [status, setStatus] = useState(Status.Unsaved)
   const [open, setOpen] = useState<boolean>(false)
-  const [selectedDrama, setSelectedDrama] = useState(null)
+  const [selectedDrama, setSelectedDrama] = useState<Drama | null>(null)
   const [selectedEpisode, setSelectedEpisode] = useState(1)
   const [keyword, setKeyword] = useState<string>('')
   const url: string =
@@ -55,18 +56,7 @@ const CreateSpot: React.FC = () => {
   const poster_url: string = 'https://image.tmdb.org/t/p/w500'
   const { data, error, isValidating } = useSWR(url, fetcher)
   const isLoading: boolean = isValidating
-
-  const [dramas, setDramas] = useState<
-    Array<{
-      id: number
-      tmdb_id: number
-      title: string
-      original_title: string
-      episode_number: number
-      season_number: number
-      poster_path: string
-    }>
-  >([])
+  const [dramas, setDramas] = useState<Drama[]>([])
   //フォームの宣言
   const {
     control,
@@ -86,6 +76,8 @@ const CreateSpot: React.FC = () => {
       latitude: 0,
       address: '',
       status: Status.Unsaved,
+      name: '',
+      files: [],
     },
   })
   //アドレスセッター
@@ -103,7 +95,8 @@ const CreateSpot: React.FC = () => {
   const [imageUrl, setImageUrl] = useState('')
   const [imageKey, setImageKey] = useState('')
   //ドロップボックスの関数
-  const onDrop = useCallback((acceptedFiles) => {
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
       acceptedFiles.forEach(async (file) => {
         try {
           // 認証情報を取得
@@ -160,8 +153,9 @@ const CreateSpot: React.FC = () => {
     },
     [setImageUrl, setImageKey, setValue],
   )
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
-
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+  })
   useEffect(() => {
     //DBのドラマを取得=>オートコンプリートへ格納
     ;(async () => {
@@ -169,15 +163,25 @@ const CreateSpot: React.FC = () => {
         const response = await axios.get(
           process.env.NEXT_PUBLIC_API_BASE_URL + '/dramas/',
         )
-        const newDramas = response.data.map((drama) => ({
-          title: drama.title,
-          id: drama.id,
-          tmdb_id: drama.tmdb_id,
-          original_title: drama.original_title,
-          poster_path: drama.poster_path,
-          episode_number: drama.episode_number,
-          season_number: drama.season_number,
-        }))
+        const newDramas = response.data.map(
+          (drama: {
+            title: string
+            id: number
+            tmdb_id: number
+            original_title: string
+            poster_path: string
+            episode_number: number
+            season_number: number
+          }) => ({
+            title: drama.title,
+            id: drama.id,
+            tmdb_id: drama.tmdb_id,
+            original_title: drama.original_title,
+            poster_path: drama.poster_path,
+            episode_number: drama.episode_number,
+            season_number: drama.season_number,
+          }),
+        )
         setDramas(newDramas)
         console.log(newDramas)
         const headers = {
@@ -192,7 +196,9 @@ const CreateSpot: React.FC = () => {
             headers: headers,
           },
         )
-        const unsavedSpot = spotResponse.data.find((spot) => spot.status === 'unsaved')
+        const unsavedSpot = spotResponse.data.find(
+          (spot: { status: string }) => spot.status === 'unsaved',
+        )
         if (!unsavedSpot) {
           const spotCreationResponse = await axios.post(
             process.env.NEXT_PUBLIC_API_BASE_URL + '/current/spots',
@@ -225,12 +231,12 @@ const CreateSpot: React.FC = () => {
   }
 
   //新規ドラマを追加した場合セレクトボックスに反映する関数
-  const updateDramaList = (newDrama) => {
+  const updateDramaList = (newDrama: any) => {
     setDramas([...dramas, newDrama])
   }
 
   //オートコンプリートの関数
-  const handleAutocompleteChange = (event, newValue) => {
+  const handleAutocompleteChange = (event: any, newValue: any) => {
     // newValue は選択されたドラマオブジェクトです
     if (newValue !== null) {
       setSelectedDrama(newValue)
@@ -244,14 +250,10 @@ const CreateSpot: React.FC = () => {
       setSelectedDrama(newValue)
     }
   }
-  //テストオートコンプリート
-  const handleChangeAutoComplete = (value) => {
-    setSelectedDrama(value)
-  }
 
   //formのsubmitを押したときに発火するspotを更新する
-  const handleUpdateSpot = async (data) => {
-    const { single, ...formData} = data
+  const handleUpdateSpot = async (data: { [x: string]: any; single: any }) => {
+    const { single, ...formData } = data
     const accessToken = localStorage.getItem('access-token')
     const client = localStorage.getItem('client')
     const uid = localStorage.getItem('uid')
@@ -265,7 +267,7 @@ const CreateSpot: React.FC = () => {
         method: 'PUT',
         url:
           process.env.NEXT_PUBLIC_API_BASE_URL +
-          `/current/spots/${unsavedSpot.id}`,
+          `/current/spots/${unsavedSpot?.id}`,
         data: formData,
         headers: {
           'Content-Type': 'application/json',
@@ -278,14 +280,14 @@ const CreateSpot: React.FC = () => {
       console.error(error)
     }
   }
-  const onClickSetLatLng = (lat, lng) => {
+  const onClickSetLatLng = (lat: number, lng: number) => {
     setValue('latitude', lat)
     setValue('longitude', lng)
   }
   ////////////////////////////////////////////////////////////////////////////////////////////////
   return (
     <>
-      <Container maxWidth="sm" sx={{justifyContent: 'center'}}>
+      <Container maxWidth="sm" sx={{ justifyContent: 'center' }}>
         <div style={{ padding: 30 }}></div>
         <Box>
           <Grid
@@ -307,9 +309,10 @@ const CreateSpot: React.FC = () => {
                     render={({ field }) => (
                       <Autocomplete
                         {...field}
+                        value={(field.value as Drama | null) || null}
                         fullWidth
                         options={dramas}
-                        getOptionLabel={(option) => option.title || ''}
+                        getOptionLabel={(option: Drama) => option.title || ''}
                         renderInput={(params) => (
                           <TextField {...params} label="drama title" />
                         )}
@@ -329,7 +332,7 @@ const CreateSpot: React.FC = () => {
                         tmdbId={selectedDrama.tmdb_id}
                         posterPath={selectedDrama.poster_path}
                         title={selectedDrama.title}
-                        date={selectedDrama.first_air_date}
+                        date={selectedDrama.first_air_date || ''}
                       />
                       <Controller
                         control={control}
@@ -342,15 +345,17 @@ const CreateSpot: React.FC = () => {
                               label="エピソード" // フォーカスを外した時のラベルの部分これを指定しないとラベルとコントロール線が被る
                               {...field}
                             >
-                              <MenuItem value="" sx={{color:'gray'}}>
+                              <MenuItem value="" sx={{ color: 'gray' }}>
                                 未選択
                               </MenuItem>
-                              {Array.from({ length: selectedDrama.episode_number }, (_, index) => (
+                              {Array.from(
+                                { length: selectedDrama.episode_number },
+                                (_, index) => (
                                   <MenuItem key={index + 1} value={index + 1}>
                                     {index + 1}話
                                   </MenuItem>
-                                ))
-                              }
+                                ),
+                              )}
                             </Select>
                             <FormHelperText>
                               {fieldState.error?.message}
@@ -396,14 +401,6 @@ const CreateSpot: React.FC = () => {
                     name="files"
                     defaultValue={[]}
                     render={({ field: { onChange, onBlur, value } }) => {
-                      const { getRootProps, getInputProps } = useDropzone({
-                        onDrop,
-                        onBlur,
-                        onChange: event => {
-                          onChange(event)
-                          onDrop(event.target.files)
-                        },
-                      })
                       return (
                         <Paper
                           variant="outlined"
@@ -421,22 +418,30 @@ const CreateSpot: React.FC = () => {
                           }}
                         >
                           <input {...getInputProps()} />
-                          {imageKey ? 
-                          <Card
-                          sx={{ width: 200, height: 200, overflow: 'hidden' }}
-                        >
-                          <CardMedia
-                            component="img"
-                            image={imageUrl}
-                            alt="画像"
-                            sx={{
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'cover',
-                            }}
-                          />
-                        </Card> 
-                          : <Typography>スポットの画像をここにドロップ、またはクリックして選択してください。</Typography>}
+                          {imageKey ? (
+                            <Card
+                              sx={{
+                                width: 200,
+                                height: 200,
+                                overflow: 'hidden',
+                              }}
+                            >
+                              <CardMedia
+                                component="img"
+                                image={imageUrl}
+                                alt="画像"
+                                sx={{
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'cover',
+                                }}
+                              />
+                            </Card>
+                          ) : (
+                            <Typography>
+                              スポットの画像をここにドロップ、またはクリックして選択してください。
+                            </Typography>
+                          )}
                         </Paper>
                       )
                     }}

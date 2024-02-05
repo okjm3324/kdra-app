@@ -1,9 +1,13 @@
-import { GoogleMap, useLoadScript, MarkerF,useJsApiLoader, } from '@react-google-maps/api'
-import { useCallback, useRef, useState } from 'react'
-import { InterfaceMap } from '../../styles/googleMapStyles'
-import PlaceInfo from './Placeinfo'
-import usePlacesAutoComplete, {getGeoCode, getLatLng} from 'use-places-autocomplete'
 import { Input, Popover } from '@mui/material'
+import {
+  GoogleMap,
+  useLoadScript,
+  MarkerF,
+  useJsApiLoader,
+} from '@react-google-maps/api'
+import { useCallback, useRef, useState } from 'react'
+import usePlacesAutoComplete from 'use-places-autocomplete'
+import { InterfaceMap } from '../../styles/googleMapStyles'
 import SearchLocation from './SearchLocation'
 import { reverseGeocode } from '@/utils/geocode'
 const googleMapOptions = {
@@ -16,20 +20,12 @@ const options = {
   zoomControl: true,
   scrollwheel: true,
 }
-const defaultLatLng = {
-  lat: 37.55612564086914,
-  lng: 126.97232055664062,
-}
 const containerStyle = {
   width: '100%',
   height: '400px',
   //地図の幅と高さを連想配列にします。
   //ちなみにこのライブラリの地図はmapContainerStyleイベントでしか
   //サイズ変更できません(多分)
-}
-const marking = {
-  lat: 33,
-  lng: 33,
 }
 
 type Marker = {
@@ -47,8 +43,11 @@ type MapProps = {
   setAddress: (address: string) => void
 }
 
-const Map: React.FC<MapProps> = ({ spots, onClickSetLatLng, setAddress  }) => {
-  const [coordinates, setCoordinates] = useState({lat: 37.55612564086914, lng: 126.97232055664062})
+const Map: React.FC<MapProps> = ({ spots, onClickSetLatLng, setAddress }) => {
+  const [coordinates, setCoordinates] = useState({
+    lat: 37.55612564086914,
+    lng: 126.97232055664062,
+  })
   const [marker, setMarker] = useState<Marker | null>(null)
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY as string,

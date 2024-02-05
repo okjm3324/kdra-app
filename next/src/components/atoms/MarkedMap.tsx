@@ -1,13 +1,18 @@
-import { GoogleMap, useLoadScript, MarkerF, useJsApiLoader, Circle } from '@react-google-maps/api'
-import { useCallback, useRef, useState, useEffect } from 'react'
-import { InterfaceMap } from '../../styles/googleMapStyles'
-import PlaceInfo from './Placeinfo'
-import usePlacesAutoComplete, {getGeoCode, getLatLng} from 'use-places-autocomplete'
 import { Input, Popover } from '@mui/material'
+import {
+  GoogleMap,
+  useLoadScript,
+  MarkerF,
+  useJsApiLoader,
+  Circle,
+} from '@react-google-maps/api'
+import { useCallback, useRef, useState, useEffect } from 'react'
+import usePlacesAutoComplete from 'use-places-autocomplete'
 import Modal from '../../components/molecules/Modal'
+import useLocationWithFallback from '../../hooks/useLocationWithFallback'
+import { InterfaceMap } from '../../styles/googleMapStyles'
+import { Spot } from '../../types/spot'
 import SpotDetailContent from '../organisms/SpotDetailContent'
-import { SportsTennis } from '@mui/icons-material'
-import useLocationWithFallback  from '../../hooks/useLocationWithFallback'
 
 const googleMapOptions = {
   styles: InterfaceMap,
@@ -33,18 +38,13 @@ type Marker = {
 }
 
 type MapProps = {
-  spots?: {
-    latitude: number
-    longitude: number
-    name: string
-    drama_id: number
-  }[]
-  selectedDramaId?: number
+  spots?: Spot[]
+  selectedDramaId?: number | null
 }
 
 const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [clickedMarker, setClickedMarker] = useState({})
+  const [clickedMarker, setClickedMarker] = useState<Spot | null>(null)
   const location = useLocationWithFallback()
   const [marker, setMarker] = useState<Marker | null>(null)
   const { isLoaded, loadError } = useLoadScript({
@@ -67,11 +67,11 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
 
   const handleCloseModal = (): void => {
     setIsModalOpen(false)
-    setClickedMarker({})
+    setClickedMarker(null)
   }
 
   //clickedMarkerセッター
-  const setterClickedMarker = (spot) => {
+  const setterClickedMarker = (spot: Spot) => {
     setClickedMarker(spot)
     console.log(spot)
     handleOpenModal()
@@ -92,31 +92,33 @@ const MarkedMap: React.FC<MapProps> = ({ spots = [], selectedDramaId }) => {
           icon={{
             path: google.maps.SymbolPath.CIRCLE,
             scale: 7, // 円のサイズ
-            fillColor: "#4285F4", // 円の色
+            fillColor: '#4285F4', // 円の色
             fillOpacity: 1, // 円の不透明度
             strokeWeight: 2, // 円の境界線の太さ
-            strokeColor: "#FFFFFF" // 円の境界線の色
+            strokeColor: '#FFFFFF', // 円の境界線の色
           }}
         />
-          {spots && spots
-            .filter(spot => {
-              const shouldDisplay = selectedDramaId === null || spot.dramaId === selectedDramaId;
+        {spots &&
+          spots
+            .filter((spot) => {
+              const shouldDisplay =
+                selectedDramaId === null || spot.dramaId === selectedDramaId
               return shouldDisplay
             })
-            .map((spot, index) => {
-            if (spot.status === "unsaved") return null
+            .map((spot) => {
+              console.log(spot)
+              if (spot.status === 'unsaved') return null
               return (
                 <MarkerF
                   key={spot.id}
-                  position={{ lat:spot.latitude, lng:spot.longitude}}
+                  position={{ lat: spot.latitude, lng: spot.longitude }}
                   onClick={() => setterClickedMarker(spot)}
                 />
               )
             })}
-        <PlaceInfo />
       </GoogleMap>
       {isModalOpen && (
-        <Modal title={"詳細"} open={isModalOpen} onClose={handleCloseModal}>
+        <Modal title={'詳細'} open={isModalOpen} onClose={handleCloseModal}>
           <SpotDetailContent spot={clickedMarker} location={location} />
         </Modal>
       )}

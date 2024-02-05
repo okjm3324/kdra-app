@@ -7,9 +7,13 @@ const useLocationWithFallback = () => {
       let { latitude, longitude } = position.coords
       try {
         // 逆ジオコーディングAPIを使用して国を判定
-        const res = await fetch( `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`)
+        const res = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`,
+        )
         const data = await res.json()
-        const country = data.results[0].address_components.find(comp => comp.types.includes("country")).short_name
+        const country = data.results[0].address_components.find((comp: any) =>
+          comp.types.includes('country'),
+        ).short_name
         // 日本であればソウル駅の座標を使用
         if (country === 'JP') {
           latitude = 37.5563 // ソウル駅の緯度

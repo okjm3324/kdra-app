@@ -1,43 +1,42 @@
-import { Box, Grid, Container, Pagination, Select, MenuItem, Typography } from '@mui/material'
+import {
+  Box,
+  Grid,
+  Container,
+  Pagination,
+  Select,
+  MenuItem,
+  Typography,
+} from '@mui/material'
+import { SelectChangeEvent } from '@mui/material/Select'
+import axios from 'axios'
 import camelcaseKeys from 'camelcase-keys'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useState, useEffect } from 'react'
 import useSWR from 'swr'
+import { Drama } from '../types/drama'
 import Loading from '@/components/atoms/Loading'
-import SpotCard from '@/components/organisms/SpotCard'
 import Map from '@/components/atoms/Map'
+import MarkedMap from '@/components/atoms/MarkedMap'
+import SpotCard from '@/components/organisms/SpotCard'
 import Error from '@/components/templates/Error'
 import { styles } from '@/styles'
 import { fetcher } from '@/utils'
-import MarkedMap from '@/components/atoms/MarkedMap'
-import { useState, useEffect } from 'react'
-import axios from 'axios'
-type SpotProps = {
-  id: number
-  name: string
-  latitude: number
-  longitude: number
-  address: string
-  key: string
-  createdAt: string
-  user: {
-    name: string
-  }
-}
+
 const Index: NextPage = () => {
   const router = useRouter()
   const page = 'page' in router.query ? Number(router.query.page) : 1
   const url = process.env.NEXT_PUBLIC_API_BASE_URL + '/spots/?page=' + page
   const [selectedDramaId, setSelectedDramaId] = useState<number | null>(null)
-  const [dramas, setDramas] = useState([])
+  const [dramas, setDramas] = useState<Drama[]>([])
   useEffect(() => {
     ;(async () => {
       try {
         const response = await axios.get(
           process.env.NEXT_PUBLIC_API_BASE_URL + '/dramas/',
         )
-        const newDramas = response.data.map((drama) => ({
+        const newDramas = response.data.map((drama: Drama) => ({
           title: drama.title,
           id: drama.id,
           tmdb_id: drama.tmdb_id,
@@ -53,6 +52,7 @@ const Index: NextPage = () => {
       }
     })()
   }, [])
+  //スポットを取得
   const { data, error } = useSWR(url, fetcher)
   if (error) return <Error />
   if (!data) return <Loading />
@@ -64,15 +64,16 @@ const Index: NextPage = () => {
     router.push('/?page=' + value)
   }
 
-  const handleDramaChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedDramaId(event.target.value as number)
+  const handleDramaChange = (event: SelectChangeEvent) => {
+    const value = event.target.value
+    setSelectedDramaId(value === '' ? null : Number(value))
   }
   return (
     <Box css={styles.pageMinHeight} sx={{ backgroundColor: '#e6f2ff' }}>
       <Container maxWidth="md" sx={{ pt: 6 }}>
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <Select
-            value={selectedDramaId}
+            value={selectedDramaId !== null ? selectedDramaId.toString() : ''}
             onChange={handleDramaChange}
             displayEmpty
             sx={{
@@ -81,14 +82,18 @@ const Index: NextPage = () => {
               marginBottom: '20px',
             }}
           >
-            <MenuItem value={null}>ドラマを選択</MenuItem>
+            <MenuItem value={''}>ドラマを選択</MenuItem>
             {dramas.map((drama) => {
-              return <MenuItem key={drama.id} value={drama.id}>{drama.title}</MenuItem>
+              return (
+                <MenuItem key={drama.id} value={drama.id}>
+                  {drama.title}
+                </MenuItem>
+              )
             })}
           </Select>
         </Box>
         <MarkedMap spots={spots} selectedDramaId={selectedDramaId} />
-       {/* <Grid container spacing={4}>
+        {/* <Grid container spacing={4}>
           {spots.map((spot: SpotProps, i: number) => (
             <Grid key={i} item xs={12} md={6}>
               <Link href={'/spots/' + spot.id}>

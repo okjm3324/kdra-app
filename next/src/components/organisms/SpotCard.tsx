@@ -1,6 +1,5 @@
-import { Box, Card, CardContent, Typography } from '@mui/material'
+import { Box, Card, CardContent, Typography, CardMedia } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { CardMedia } from '@mui/material';
 
 type SpotCardProps = {
   name: string
@@ -15,8 +14,6 @@ const omit = (text: string) => (len: number) => (ellipsis: string) =>
   text.length >= len ? text.slice(0, len - ellipsis.length) + ellipsis : text
 
 const SpotCard = (props: SpotCardProps) => {
-
-
   return (
     <Card>
       <CardContent>
@@ -36,8 +33,8 @@ const SpotCard = (props: SpotCardProps) => {
           <Typography sx={{ fontSize: 12 }}>{props.userName}</Typography>
           <Typography sx={{ fontSize: 12 }}>{props.address}</Typography>
 
-          <Box sx={{width:20, height:20}}>
-            <img src={''} alt='画像'></img>
+          <Box sx={{ width: 20, height: 20 }}>
+            <img src={''} alt="画像"></img>
           </Box>
         </Box>
       </CardContent>

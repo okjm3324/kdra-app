@@ -1,13 +1,18 @@
-import React from 'react'
-import { Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent } from '@mui/material'
+import React, { ReactNode, FC } from 'react'
 
-const Modal = ({ open, onClose, children, title }) => {
+interface ModalProps {
+  open: boolean
+  onClose: () => void
+  children: ReactNode
+  title?: string
+}
+
+const Modal: FC<ModalProps> = ({ open, onClose, children, title }) => {
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="xl">
       <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-       {children}
-      </DialogContent>
+      <DialogContent>{children}</DialogContent>
     </Dialog>
   )
 }
