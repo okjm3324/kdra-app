@@ -1,5 +1,4 @@
 // SearchLocation.tsx
-import { type } from 'os'
 import { Autocomplete, TextField } from '@mui/material'
 import React from 'react'
 import usePlacesAutocomplete, {

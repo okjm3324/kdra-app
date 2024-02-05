@@ -1,18 +1,13 @@
-import { Input, Popover } from '@mui/material'
 import {
   GoogleMap,
   useLoadScript,
   MarkerF,
-  useJsApiLoader,
 } from '@react-google-maps/api'
 import { useCallback, useRef, useState } from 'react'
-import usePlacesAutoComplete from 'use-places-autocomplete'
 import { InterfaceMap } from '../../styles/googleMapStyles'
 import SearchLocation from './SearchLocation'
 import { reverseGeocode } from '@/utils/geocode'
-const googleMapOptions = {
-  styles: InterfaceMap,
-}
+
 const libraries: 'places'[] = ['places']
 const options = {
   styles: InterfaceMap,
