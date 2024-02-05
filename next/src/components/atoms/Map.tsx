@@ -1,8 +1,4 @@
-import {
-  GoogleMap,
-  useLoadScript,
-  MarkerF,
-} from '@react-google-maps/api'
+import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api'
 import { useCallback, useRef, useState } from 'react'
 import { InterfaceMap } from '../../styles/googleMapStyles'
 import SearchLocation from './SearchLocation'
