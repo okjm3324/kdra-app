@@ -1,8 +1,4 @@
-import {
-  GoogleMap,
-  useLoadScript,
-  MarkerF,
-} from '@react-google-maps/api'
+import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api'
 import { useCallback, useRef, useState } from 'react'
 import { InterfaceMap } from '../../styles/googleMapStyles'
 import SearchLocation from './SearchLocation'
@@ -41,7 +37,7 @@ type MapProps = {
 const Map: React.FC<MapProps> = ({ spots, onClickSetLatLng, setAddress }) => {
   const [coordinates, setCoordinates] = useState({
     lat: 37.556125,
-    lng: 126.972320,
+    lng: 126.97232,
   })
   const [marker, setMarker] = useState<Marker | null>(null)
   const { isLoaded, loadError } = useLoadScript({
