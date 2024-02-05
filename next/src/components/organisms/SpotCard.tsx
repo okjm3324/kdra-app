@@ -1,5 +1,4 @@
-import { Box, Card, CardContent, Typography, CardMedia } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { Box, Card, CardContent, Typography } from '@mui/material'
 
 type SpotCardProps = {
   name: string

@@ -1,4 +1,3 @@
-import { LoadingButton } from '@mui/lab'
 import {
   Grid,
   Button,
@@ -15,21 +14,17 @@ import {
   Card,
   CardMedia,
   Container,
-  styled,
   Switch,
   FormControlLabel,
 } from '@mui/material'
-import axios, { AxiosResponse, AxiosError } from 'axios'
-import camelcaseKeys from 'camelcase-keys'
-import type { NextPage } from 'next'
+import axios from 'axios'
 import React, { useEffect, useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useForm, Controller } from 'react-hook-form'
-import useSWR, { mutate } from 'swr'
+import useSWR from 'swr'
 import DramaCard from '../../components/atoms/DramaCard'
 import Modal from '../../components/molecules/Modal'
 import { Drama } from '../../types/drama'
-import FormSelectBox from '@/components/atoms/FormSelectBox'
 import Map from '@/components/atoms/Map'
 import CreateDramaContent from '@/components/organisms/CreateDramaContent'
 import { Spot } from '@/types/spot'

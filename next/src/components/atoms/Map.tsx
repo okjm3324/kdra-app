@@ -1,18 +1,9 @@
-import { Input, Popover } from '@mui/material'
-import {
-  GoogleMap,
-  useLoadScript,
-  MarkerF,
-  useJsApiLoader,
-} from '@react-google-maps/api'
+import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api'
 import { useCallback, useRef, useState } from 'react'
-import usePlacesAutoComplete from 'use-places-autocomplete'
 import { InterfaceMap } from '../../styles/googleMapStyles'
 import SearchLocation from './SearchLocation'
 import { reverseGeocode } from '@/utils/geocode'
-const googleMapOptions = {
-  styles: InterfaceMap,
-}
+
 const libraries: 'places'[] = ['places']
 const options = {
   styles: InterfaceMap,
@@ -45,8 +36,8 @@ type MapProps = {
 
 const Map: React.FC<MapProps> = ({ spots, onClickSetLatLng, setAddress }) => {
   const [coordinates, setCoordinates] = useState({
-    lat: 37.55612564086914,
-    lng: 126.97232055664062,
+    lat: 37.556125,
+    lng: 126.97232,
   })
   const [marker, setMarker] = useState<Marker | null>(null)
   const { isLoaded, loadError } = useLoadScript({

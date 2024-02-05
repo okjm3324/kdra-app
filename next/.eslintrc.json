@@ -15,6 +15,9 @@
     "import/order": [2, { "alphabetize": { "order": "asc" } }],
     "import/no-unresolved": "off",
     "react/prop-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-loss-of-precision": "off",
     "prettier/prettier": [
       "error",
       {
