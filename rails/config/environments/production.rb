@@ -1,6 +1,19 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+  # 認証メール送信に関する記述
+  config.action_mailer.default_options = { from: "kandramap@gmail.com" }
+  config.action_mailer.default_url_options = { host: "https://kdra-app.vercel.app" }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com",
+    port: 587,
+    domain: "gmail.com",
+    user_name: Rails.application.credentials.production.gmail.user_name,
+    password: Rails.application.credentials.production.gmail.password,
+    authentication: "plain",
+    enable_starttls_auto: true,
+  }
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
