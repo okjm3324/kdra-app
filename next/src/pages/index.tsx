@@ -121,7 +121,7 @@ const Top: NextPage = () => {
       <Box
         sx={{ mx: 'auto', display: 'flex', justifyContent: 'center', my: 2 }}
       >
-        <Link href="/">
+        <Link href="/top">
           <Button
             color="primary"
             variant="contained"
