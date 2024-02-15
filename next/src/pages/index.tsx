@@ -1,7 +1,7 @@
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 import { Typography, Card, CardMedia, Box, Button, Link } from '@mui/material'
 import type { NextPage } from 'next'
-const Top: NextPage = () => {
+const Index: NextPage = () => {
   return (
     <Box sx={{ backgroundColor: '#EFEEEB', minHeight: '100vh' }}>
       <Box sx={{ width: '100%', maxWidth: 600, mx: 'auto' }}>
@@ -137,8 +137,38 @@ const Top: NextPage = () => {
           </Button>
         </Link>
       </Box>
+      <Card
+        elevation={0}
+        sx={{
+          backgroundColor: '#ED9FA0',
+          width: '100%',
+          maxWidth: '300px',
+          mx: 'auto',
+          mt: 8,
+          p: 1,
+        }}
+      >
+        <Typography variant="h6" color="white" sx={{ fontWeight: 'bold' }}>
+          iPhoneでsafariをお使いの場合
+        </Typography>
+        <Typography color="white">
+          現在地が正しく表示されない場合 以下の操作で位置情報を許可してください{' '}
+          <br />
+          <br />
+          ①[設定]を開く
+          <br />
+          <br />
+          ②［プライバシー］-［位置情報サービス］を選択します
+          <br />
+          <br />
+          ③サービス一覧から、[Safariのサイト］を選択します
+          <br />
+          <br />
+          ④[しない]にチェックがついている場合、[しない]以外を選択してください
+        </Typography>
+      </Card>
     </Box>
   )
 }
 
-export default Top
+export default Index
