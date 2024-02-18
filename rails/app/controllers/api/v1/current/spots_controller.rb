@@ -11,8 +11,14 @@ class Api::V1::Current::SpotsController < Api::V1::BaseController
   end
 
   def create
-    unsaved_spot = current_user.spots.unsaved.first || current_user.spots.create!(status: :unsaved)
-    render json: unsaved_spot
+    begin
+      unsaved_spot = current_user.spots.unsaved.first || current_user.spots.create!(status: :unsaved)
+      render json: unsaved_spot
+    rescue ActiveRecord::RecordInvalid => e
+      logger.error e.message
+      logger.error e.record.errors.full_messages.join("\n")
+      render json: { error: e.message, details: e.record.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   def update
