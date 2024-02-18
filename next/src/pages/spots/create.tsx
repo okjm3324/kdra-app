@@ -178,7 +178,6 @@ const CreateSpot: React.FC = () => {
           }),
         )
         setDramas(newDramas)
-        console.log(newDramas)
         const headers = {
           'Content-Type': 'application/json',
           'access-token': localStorage.getItem('access-token'),
@@ -202,6 +201,7 @@ const CreateSpot: React.FC = () => {
               headers: headers,
             },
           )
+          console.log('レスポンス' + spotResponse.data)
           // 新しく作成した未保存のスポットをセット
           setUnsavedSpot(spotCreationResponse.data)
         } else {
@@ -269,8 +269,6 @@ const CreateSpot: React.FC = () => {
           ...authHeaders,
         },
       })
-
-      console.log(response.data)
     } catch (error) {
       console.error(error)
     }
