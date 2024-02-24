@@ -23,7 +23,7 @@ test:
   host: postgres
 
 
-production:
-  <<: *default
-  database: myapp_prouction
-  url: <%= Rails.application.credentials.production.database_url %>
+ production:
+   <<: *default
+   database: myapp_production
+   url: <%= ENV['DATABASE_URL'] %>
