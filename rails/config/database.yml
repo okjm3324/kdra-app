@@ -26,4 +26,6 @@ test:
 production:
   <<: *default
   database: myapp_production
-  url: <%= Rails.application.credentials.production.database_url %>
+  username: <%= Rails.application.credentials.production.database.user %> # RDS DBインスタンスのユーザー名
+  password: <%= Rails.application.credentials.production.database.password %> # RDS DBインスタンスのパスワード
+  host: <%= Rails.application.credentials.production.database.host %> # RDS DBインスタンスのエンドポイント
