@@ -29,7 +29,4 @@ production:
   #username: <%= Rails.application.credentials.production.database.user %> # RDS DBインスタンスのユーザー名
   #password: <%= Rails.application.credentials.production.database.password %> # RDS DBインスタンスのパスワード
   #host: <%= Rails.application.credentials.production.database.host %> # RDS DBインスタンスのエンドポイント
-  database: <%= ENV['APP_DATABASE'] %>
-  username: <%= ENV['APP_DATABASE_USERNAME'] %>
-  password: <%= ENV['APP_DATABASE_PASSWORD'] %>
-  host: <%= ENV['APP_DATABASE_HOST'] %>
+  url: <%= ENV['DATABASE_URL'] %>
