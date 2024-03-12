@@ -71,6 +71,7 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
   config.hosts << "kdra-8fc9289e3410.herokuapp.com"
+  config.hosts << "kdra-map-80be11920981.herokuapp.com/"
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 end
