@@ -17,7 +17,6 @@ class Api::V1::SpotsController < Api::V1::BaseController
   end
 
   def update
-    binding.pry
     spot = current_user.spots.find(params[:id])
     spot.update!(spot_params)
   end
