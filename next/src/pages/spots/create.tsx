@@ -18,6 +18,7 @@ import {
   FormControlLabel,
 } from '@mui/material'
 import axios from 'axios'
+import { useRouter } from 'next/router'
 import React, { useEffect, useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useForm, Controller } from 'react-hook-form'
@@ -37,6 +38,7 @@ enum Status {
 }
 
 const CreateSpot: React.FC = () => {
+  const router = useRouter()
   //編集するスポットを格納
   const [unsavedSpot, setUnsavedSpot] = useState<Spot | null>(null)
   // 公開か下書きかのステイト
@@ -138,7 +140,7 @@ const CreateSpot: React.FC = () => {
             },
           )
           //画像のURLをセット
-          setImageUrl(res.data.signed_url)
+          setImageUrl(process.env.NEXT_PUBLIC_IMAGE_BASE_URL + key)
           setImageKey(key)
           setValue('key', key)
         } catch (error) {
@@ -146,7 +148,7 @@ const CreateSpot: React.FC = () => {
         }
       })
     },
-    [setImageUrl, setImageKey, setValue],
+    [setImageUrl, setImageKey, setValue, imageUrl],
   )
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -184,30 +186,15 @@ const CreateSpot: React.FC = () => {
           client: localStorage.getItem('client'),
           uid: localStorage.getItem('uid'),
         }
-        const spotResponse = await axios.get(
+        const spotCreationResponse = await axios.post(
           process.env.NEXT_PUBLIC_API_BASE_URL + '/current/spots',
+          {},
           {
             headers: headers,
           },
         )
-        const unsavedSpot = spotResponse.data.find(
-          (spot: { status: string }) => spot.status === 'unsaved',
-        )
-        if (!unsavedSpot) {
-          const spotCreationResponse = await axios.post(
-            process.env.NEXT_PUBLIC_API_BASE_URL + '/current/spots',
-            {},
-            {
-              headers: headers,
-            },
-          )
-          console.log('レスポンス' + spotResponse.data)
-          // 新しく作成した未保存のスポットをセット
-          setUnsavedSpot(spotCreationResponse.data)
-        } else {
-          // 既存の未保存のスポットをセット
-          setUnsavedSpot(unsavedSpot)
-        }
+        // 新しく作成した未保存のスポットをセット
+        setUnsavedSpot(spotCreationResponse.data)
       } catch (error) {
         console.error('リクエストエラー', error)
       }
@@ -269,6 +256,7 @@ const CreateSpot: React.FC = () => {
           ...authHeaders,
         },
       })
+      router.push('/top')
     } catch (error) {
       console.error(error)
     }
@@ -370,7 +358,7 @@ const CreateSpot: React.FC = () => {
                     </>
                   )}
 
-                  <label className="block mb-4">
+                  {/* <label className="block mb-4">
                     <span>画像</span>
                     {imageKey && (
                       <Card
@@ -388,7 +376,7 @@ const CreateSpot: React.FC = () => {
                         />
                       </Card>
                     )}
-                  </label>
+                  </label> */}
                   <Controller
                     control={control}
                     name="files"
